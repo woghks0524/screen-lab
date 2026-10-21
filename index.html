@@ -145,6 +145,45 @@ iframe { display: block; width: 100%; height: 586px; border: 0; background: #fff
 .gempty { color: var(--sub); }
 @media (max-width: 640px) { .gtools { top: 0; } .gtab td:first-child { white-space: normal; } }
 
+/* 내 앱 구상하기 */
+.plan { display: grid; gap: 18px; }
+.plan-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.plan-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 960px) { .plan-grid { grid-template-columns: 1fr; } }
+.plan-form { display: grid; gap: 14px; }
+.pbox { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: grid; gap: 10px; }
+.pbox h3 { font-size: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pbox h3 small { font: 500 15px var(--font-body); color: var(--sub); letter-spacing: 0; }
+.pno { width: 28px; height: 28px; border-radius: 50%; background: var(--css); color: #fff; font-size: 15px; display: inline-grid; place-items: center; flex: none; }
+.phint { color: var(--sub); font-size: 15px; }
+.pin { width: 100%; font: 17px/1.6 var(--font-body); color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+textarea.pin { resize: vertical; }
+.pin:focus { outline: none; border-color: var(--css); }
+.pscreens { display: grid; gap: 10px; }
+.pscreen { border: 1.5px dashed var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 8px; }
+.pscreen-top { display: flex; gap: 8px; align-items: center; }
+.pscreen-top .pin { font-weight: 700; }
+.pdel { appearance: none; border: 0; background: none; color: var(--sub); font-size: 22px; line-height: 1; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.pdel:hover { color: var(--html); background: var(--html-soft); }
+.pbtn { appearance: none; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); font: 700 15px var(--font-body); padding: 9px 14px; border-radius: 10px; cursor: pointer; }
+.pbtn:hover { border-color: var(--sub); }
+.pbtn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pbtn.warn { color: var(--html); }
+.pbtn.add { justify-self: start; border-style: dashed; color: var(--css); }
+.pbtn:focus-visible, .pdel:focus-visible { outline: 2px solid var(--css); outline-offset: 2px; }
+.plan-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.plan-out { position: sticky; top: 100px; }
+@media (max-width: 960px) { .plan-out { position: static; } }
+.pbox.out { background: var(--html-soft); border-color: transparent; }
+.pbox.out pre { margin: 0; white-space: pre-wrap; font: 16px/1.7 var(--font-body); background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; max-height: 60vh; overflow: auto; }
+.psaved { font-size: 14px; color: var(--sub); }
+.ptoast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 10px 18px; border-radius: 999px; font-weight: 700; z-index: 20; }
+@media print {
+  body.printing-plan header, body.printing-plan .pagenav, body.printing-plan .plan-acts, body.printing-plan .pbtn, body.printing-plan .pdel, body.printing-plan .plan-out { display: none !important; }
+  body.printing-plan { background: #fff; padding: 0; }
+  body.printing-plan .plan-grid { grid-template-columns: 1fr; }
+}
+
 /* 틀린 그림 찾기 */
 .spot { display: grid; gap: 18px; }
 .spot-row { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 14px; }
@@ -184,8 +223,52 @@ iframe { display: block; width: 100%; height: 586px; border: 0; background: #fff
     <button class="pagebtn" data-page="lab"><span class="pn">1</span><span>화면 언어 6단계<small>HTML → CSS → JS → TS · Tailwind · React</small></span></button>
     <button class="pagebtn" data-page="spot"><span class="pn">2</span><span>틀린 그림 찾기<small>JS 있고 없고 · 코드 / DB / API</small></span></button>
     <button class="pagebtn" data-page="glos"><span class="pn">3</span><span>용어 사전<small>부록 1~5 · 낱말 찾기</small></span></button>
-    <a class="pagebtn" href="/plan" style="text-decoration:none"><span class="pn">4</span><span>내 앱 구상하기<small>활동지 칸 채우기 → AI 프롬프트</small></span></a>
+    <button class="pagebtn" data-page="plan"><span class="pn">4</span><span>내 앱 구상하기<small>MVP · 화면 · PRD → AI 프롬프트</small></span></button>
   </nav>
+
+  <section class="plan pg-plan" aria-label="내 앱 구상하기" hidden>
+    <div class="plan-head">
+      <div>
+        <h2>내 앱 구상하기</h2>
+        <p class="lead">생각나는 대로 편하게 적으세요. 오른쪽에 AI에게 보낼 프롬프트가 저절로 만들어지고, 쓰는 내용은 이 컴퓨터에 자동 저장돼요.</p>
+      </div>
+      <div class="plan-acts"><button class="pbtn" id="pExample">예시 보기</button><button class="pbtn warn" id="pReset">처음부터</button></div>
+    </div>
+    <div class="plan-grid">
+      <div class="plan-form" id="pForm">
+        <div class="pbox">
+          <h3><span class="pno">1</span>무엇을 만들까요?</h3>
+          <input class="pin" id="pTitle" placeholder="예: 친구 칭찬 게시판">
+        </div>
+        <div class="pbox">
+          <h3><span class="pno">2</span>MVP <small>제일 먼저, 이것만은 꼭 되어야 해요</small></h3>
+          <textarea class="pin" id="pMvp" rows="4" placeholder="예: 학생이 칭찬 글을 쓰면 화면에 카드로 바로 보인다. 일단 이것만 되면 돼요."></textarea>
+        </div>
+        <div class="pbox">
+          <h3><span class="pno">3</span>화면 <small>메인 페이지부터, 필요하면 더 추가하세요</small></h3>
+          <div id="pScreens" class="pscreens"></div>
+          <button class="pbtn add" id="pAdd">+ 화면 추가</button>
+        </div>
+        <div class="pbox">
+          <h3><span class="pno">4</span>PRD <small>그 밖에 생각나는 것을 주저리주저리</small></h3>
+          <p class="phint">누가 쓰나요? 왜 필요해요? 무엇을 저장하나요? 누가 지울 수 있나요? 이번엔 빼도 되는 건요? 아무 순서로나 적어도 돼요.</p>
+          <textarea class="pin" id="pPrd" rows="8" placeholder="예: 우리 반 24명이 아침 활동 시간에 크롬북으로 써요. 칭찬 쪽지를 모으는 데 시간이 너무 걸려서 만들어요. 이름은 저장하지 말고 번호만. 자기 글만 지울 수 있고 선생님은 다 지울 수 있게. 로그인은 이번엔 빼요."></textarea>
+        </div>
+      </div>
+      <aside class="plan-out">
+        <div class="pbox out">
+          <h3>AI에게 보낼 프롬프트</h3>
+          <pre id="pPrompt"></pre>
+          <div class="plan-acts">
+            <button class="pbtn primary" id="pCopy">프롬프트 복사</button>
+            <button class="pbtn" id="pMd">파일로 저장(.md)</button>
+            <button class="pbtn" id="pPrint">인쇄</button>
+          </div>
+          <span class="psaved" id="pSaved"></span>
+        </div>
+      </aside>
+    </div>
+  </section>
 
   <section class="pg-lab" aria-label="단계별 화면">
     <div class="tabbar" role="tablist">
@@ -579,9 +662,10 @@ document.querySelector(".tabbar").addEventListener("keydown", e => {
   const nx = ORDER[(cur + (e.key === "ArrowRight" ? 1 : ORDER.length - 1)) % ORDER.length];
   show(nx); document.getElementById("tab-" + nx).focus();
 });
-let curPage = location.hash === "#spot" ? "spot" : location.hash === "#glos" ? "glos" : "lab";
+let curPage = ["spot", "glos", "plan"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "lab";
 function setPage(pg) {
   curPage = pg;
+  document.querySelectorAll(".pg-plan").forEach(el => el.hidden = pg !== "plan");
   document.querySelectorAll(".pg-lab").forEach(el => el.hidden = pg !== "lab");
   document.querySelectorAll(".pg-spot").forEach(el => el.hidden = pg !== "spot");
   document.querySelectorAll(".pg-glos").forEach(el => el.hidden = pg !== "glos");
@@ -621,6 +705,87 @@ gq.addEventListener("input", () => {
   });
   document.getElementById("gempty").hidden = any;
 });
+// ── 내 앱 구상하기 ──
+const PKEY = "plan-sheet-v2";
+const $p = id => document.getElementById(id);
+const P_EXAMPLE = {
+  title: "친구 칭찬 게시판",
+  mvp: "학생이 칭찬 글을 쓰면 화면에 카드로 바로 보인다. 일단 이것만 되면 돼요.",
+  screens: [{ name: "메인 페이지", desc: "위에 칭찬 글 쓰는 칸과 올리기 버튼, 아래에 칭찬 카드가 최신순으로 쌓여요." },
+            { name: "선생님 페이지", desc: "카드 목록이 표로 보이고, 줄마다 지우기 버튼이 있어요." }],
+  prd: "우리 반 24명이 아침 활동 시간에 크롬북으로 써요. 칭찬 쪽지를 모으는 데 시간이 너무 걸려서 만들어요. 이름은 저장하지 말고 번호만. 자기 글만 지울 수 있고 선생님은 다 지울 수 있게. 로그인은 이번엔 빼요."
+};
+function pBlank() { return { title: "", mvp: "", screens: [{ name: "메인 페이지", desc: "" }], prd: "" }; }
+let pData = pBlank();
+try { const s = JSON.parse(localStorage.getItem(PKEY) || "null"); if (s && Array.isArray(s.screens)) pData = s; } catch (e) {}
+
+const pEsc = s => esc(s || "").replace(/"/g, "&quot;");
+function pRenderScreens() {
+  $p("pScreens").innerHTML = pData.screens.map((s, i) => `
+    <div class="pscreen">
+      <div class="pscreen-top">
+        <input class="pin" data-i="${i}" data-f="name" value="${pEsc(s.name)}" placeholder="화면 이름 (예: 선생님 페이지)" aria-label="${i + 1}번 화면 이름">
+        ${i ? `<button class="pdel" data-del="${i}" aria-label="${i + 1}번 화면 지우기" title="이 화면 지우기">×</button>` : ""}
+      </div>
+      <textarea class="pin" data-i="${i}" data-f="desc" rows="2" placeholder="이 화면에 무엇이 있나요? 예: 위에 글 쓰는 칸, 아래에 카드 목록">${pEsc(s.desc)}</textarea>
+    </div>`).join("");
+}
+function pFill() { $p("pTitle").value = pData.title; $p("pMvp").value = pData.mvp; $p("pPrd").value = pData.prd; pRenderScreens(); }
+function pBuild(d) {
+  const L = [`${d.title || "[무엇을 만들까요?]"}을(를) 만들고 싶어.`, ""];
+  L.push("[MVP: 먼저 이것만 만들어 줘]", d.mvp || "[제일 먼저 되어야 하는 것]", "");
+  const sc = d.screens.filter(s => s.name || s.desc);
+  if (sc.length) { L.push("[화면]"); sc.forEach((s, i) => L.push(`${i + 1}. ${s.name || "화면"}${s.desc ? ": " + s.desc : ""}`)); L.push(""); }
+  if (d.prd) L.push("[그 밖에 생각한 것]", d.prd, "");
+  L.push("한국어 화면으로, 크롬북과 휴대폰에서 잘 보이게 해 줘. 학생 이름·얼굴·성적은 저장하지 말고, API 키는 화면 코드에 넣지 마. 만들기 전에 궁금한 점이 있으면 먼저 물어봐 줘.");
+  return L.join("\n");
+}
+function pUpdate(save = true) {
+  $p("pPrompt").textContent = pBuild(pData);
+  if (!save) return;
+  try { localStorage.setItem(PKEY, JSON.stringify(pData)); $p("pSaved").textContent = "이 컴퓨터에 저장됨 · " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }); } catch (e) {}
+}
+function pToast(t) { let el = document.querySelector(".ptoast"); if (!el) { el = document.createElement("div"); el.className = "ptoast"; document.body.appendChild(el); } el.textContent = t; el.hidden = false; clearTimeout(pToast.t); pToast.t = setTimeout(() => el.hidden = true, 1600); }
+
+$p("pForm").addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "pTitle") pData.title = t.value;
+  else if (t.id === "pMvp") pData.mvp = t.value;
+  else if (t.id === "pPrd") pData.prd = t.value;
+  else if (t.dataset.i) pData.screens[+t.dataset.i][t.dataset.f] = t.value;
+  pUpdate();
+});
+$p("pScreens").addEventListener("click", e => {
+  const i = e.target.dataset.del; if (i === undefined) return;
+  const s = pData.screens[+i];
+  if ((s.name || s.desc) && !confirm(`'${s.name || "이 화면"}'을(를) 지울까요?`)) return;
+  pData.screens.splice(+i, 1); pRenderScreens(); pUpdate();
+});
+$p("pAdd").onclick = () => {
+  pData.screens.push({ name: "", desc: "" }); pRenderScreens(); pUpdate();
+  $p("pScreens").querySelector(`[data-i="${pData.screens.length - 1}"][data-f="name"]`).focus();
+};
+$p("pCopy").onclick = async () => {
+  try { await navigator.clipboard.writeText($p("pPrompt").textContent); pToast("복사했어요. Claude에 붙여 넣으세요"); }
+  catch (e) { const r = document.createRange(); r.selectNodeContents($p("pPrompt")); getSelection().removeAllRanges(); getSelection().addRange(r); pToast("글이 선택됐어요. Ctrl+C로 복사하세요"); }
+};
+$p("pMd").onclick = () => {
+  const d = pData;
+  const md = `# ${d.title || "내 앱"}\n\n## MVP\n${d.mvp}\n\n## 화면\n${d.screens.map((s, i) => `${i + 1}. **${s.name || "화면"}** ${s.desc}`).join("\n")}\n\n## PRD\n${d.prd}\n\n## AI에게 보낼 프롬프트\n\n${pBuild(d)}\n`;
+  const a = document.createElement("a"); a.download = (d.title ? d.title.slice(0, 20) : "내앱") + "_구상.md";
+  a.href = URL.createObjectURL(new Blob([md], { type: "text/markdown" })); a.click();
+};
+$p("pPrint").onclick = () => { document.body.classList.add("printing-plan"); print(); document.body.classList.remove("printing-plan"); };
+$p("pExample").onclick = () => {
+  if ((pData.title || pData.mvp || pData.prd) && !confirm("지금 쓴 내용 위에 예시를 덮어쓸까요?")) return;
+  pData = JSON.parse(JSON.stringify(P_EXAMPLE)); pFill(); pUpdate();
+};
+$p("pReset").onclick = () => {
+  if (!confirm("쓴 내용을 모두 지우고 처음부터 할까요?")) return;
+  pData = pBlank(); pFill(); try { localStorage.removeItem(PKEY); } catch (e) {} pUpdate(false); $p("pSaved").textContent = "";
+};
+pFill(); pUpdate(false);
+
 // ── 틀린 그림 찾기 ──
 const API_URL = "https://screen-lab-ten.vercel.app/api/quiz";
 const FAIL = 'document.getElementById("question").innerHTML = "<span style=\'color:crimson\'>불러오지 못했어요. screen-lab-ten.vercel.app 에서 열어 주세요.</span>";';
