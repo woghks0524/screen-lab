@@ -288,6 +288,7 @@ textarea.pin { resize: vertical; }
           <div class="plan-acts">
             <button class="pbtn primary" id="pCopy">프롬프트 복사</button>
             <button class="pbtn" id="pMd">파일로 저장(.md)</button>
+            <button class="pbtn" id="pPdf">⬇ 그림까지 PDF로 받기</button>
             <button class="pbtn" id="pPrint">인쇄</button>
           </div>
           <span class="psaved" id="pSaved"></span>
@@ -893,6 +894,50 @@ $p("pMd").onclick = () => {
   const md = `# ${d.title || "내 앱"}\n\n## AI에게 보낼 프롬프트\n\n${pBuild(d)}\n`;
   const a = document.createElement("a"); a.download = (d.title ? d.title.slice(0, 20) : "내앱") + "_구상.md";
   a.href = URL.createObjectURL(new Blob([md], { type: "text/markdown" })); a.click();
+};
+// PDF 내려받기: 한 칸씩 그림으로 떠서 A4에 차례로 붙임(칸이 쪽 경계에서 잘리지 않게)
+function pLoad(src) { return new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+$p("pPdf").onclick = async () => {
+  const btn = $p("pPdf"); btn.disabled = true; btn.textContent = "만드는 중…";
+  const sheet = document.createElement("div");
+  try {
+    if (!window.html2canvas) await pLoad("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    if (!window.jspdf) await pLoad("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    const d = pData, T = s => esc(s || "").replace(/\n/g, "<br>") || '<span style="color:#9aa1ad">(비어 있음)</span>';
+    const H = t => `<div style="font-weight:800;font-size:19px;color:#2a6fdb;margin-bottom:6px">${t}</div>`;
+    const box = inner => `<div class="pp" style="border:1.5px solid #e1e4e8;border-radius:12px;padding:14px 16px;margin-bottom:12px">${inner}</div>`;
+    const imgs = d.screens.map((_, i) => { const cv = $p("pScreens").querySelector(`canvas[data-i="${i}"]`); const c = document.createElement("canvas"); c.width = PW; c.height = PH; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, PW, PH); x.drawImage(cv, 0, 0); return c.toDataURL("image/png"); });
+    const apis = P_APIS.filter(a => d.apis.includes(a[0])).map(a => `• ${a[1]} — ${a[2]}`); if (d.apiEtc) apis.push("• " + esc(d.apiEtc));
+    sheet.style.cssText = "position:fixed;left:-10000px;top:0;width:760px;background:#fff;color:#1f2430;font:16px/1.65 'Pretendard Variable',Pretendard,'Malgun Gothic',sans-serif;word-break:keep-all;padding:0";
+    sheet.innerHTML =
+      `<div class="pp" style="border-bottom:2px solid #1f2430;padding-bottom:10px;margin-bottom:14px"><div style="font-size:14px;color:#5c6474">내 앱 구상하기</div><div style="font-size:28px;font-weight:800">${esc(d.title || "내 앱")}</div></div>` +
+      box(H("MVP · 제일 먼저 되어야 하는 것") + T(d.mvp)) +
+      d.screens.map((s, i) => box(H(`화면 ${i + 1} · ${esc(s.name || "화면")}`) + (s.strokes.length ? `<img src="${imgs[i]}" style="width:100%;border:1px solid #e1e4e8;border-radius:8px;display:block;margin-bottom:8px">` : "") + T(s.desc))).join("") +
+      box(H("PRD · 그 밖에 생각한 것") + T(d.prd)) +
+      box(H("필요한 기능·API") + (apis.length ? apis.join("<br>") : T(""))) +
+      box(H("AI에게 보낼 프롬프트") + `<div style="font-size:14px">${T(pBuild(d))}</div>`);
+    document.body.appendChild(sheet);
+    await Promise.all([...sheet.querySelectorAll("img")].map(im => im.decode().catch(() => {})));
+    const pdf = new jspdf.jsPDF({ unit: "mm", format: "a4" });
+    const M = 14, W = 210 - M * 2, PHmm = 297 - M * 2; let y = M;
+    for (const el of sheet.querySelectorAll(".pp")) {
+      const c = await html2canvas(el, { scale: 2, backgroundColor: "#fff" });
+      let h = c.height * W / c.width, sy = 0;
+      if (y + h > M + PHmm && y > M) { pdf.addPage(); y = M; }
+      // 한 칸이 한 쪽보다 길면(긴 PRD 등) 쪽 단위로 잘라 이어 붙임
+      while (h > 0) {
+        const fit = Math.min(h, M + PHmm - y), srcH = fit * c.width / W;
+        const part = document.createElement("canvas"); part.width = c.width; part.height = Math.ceil(srcH);
+        part.getContext("2d").drawImage(c, 0, sy, c.width, srcH, 0, 0, c.width, srcH);
+        pdf.addImage(part.toDataURL("image/jpeg", .92), "JPEG", M, y, W, fit);
+        h -= fit; sy += srcH; y += fit + 3;
+        if (h > 0) { pdf.addPage(); y = M; }
+      }
+    }
+    pdf.save((d.title ? d.title.slice(0, 20) : "내앱") + "_구상.pdf");
+    pToast("PDF를 내려받았어요");
+  } catch (e) { pToast("PDF를 만들지 못했어요. '인쇄'에서 PDF로 저장해 주세요"); }
+  finally { sheet.remove(); btn.disabled = false; btn.textContent = "⬇ 그림까지 PDF로 받기"; }
 };
 $p("pPrint").onclick = () => { document.body.classList.add("printing-plan"); print(); document.body.classList.remove("printing-plan"); };
 $p("pExample").onclick = () => {
