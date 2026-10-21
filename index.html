@@ -171,6 +171,20 @@ textarea.pin { resize: vertical; }
 .pscreen-top .pin { font-weight: 700; }
 .pdel { appearance: none; border: 0; background: none; color: var(--sub); font-size: 22px; line-height: 1; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
 .pdel:hover { color: var(--html); background: var(--html-soft); }
+.psketch { display: grid; gap: 6px; }
+.psketch canvas { width: 100%; aspect-ratio: 16 / 9; border: 1.5px solid var(--line); border-radius: 10px; background-color: #fff;
+  background-image: radial-gradient(#d5d9e0 1px, transparent 1px); background-size: 18px 18px; touch-action: none; cursor: crosshair; display: block; }
+.psk-tools { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.psk-tools .pbtn { padding: 5px 10px; font-size: 14px; }
+.psk-tools .pbtn[aria-pressed="true"] { background: var(--css-soft); border-color: var(--css); color: var(--css); }
+.psk-tools span { font-size: 13px; color: var(--sub); margin-left: auto; }
+.papis { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.papi { display: flex; gap: 8px; align-items: flex-start; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; cursor: pointer; background: var(--paper); }
+.papi input { margin-top: 5px; width: 17px; height: 17px; flex: none; }
+.papi b { display: block; font-size: 15px; }
+.papi small { display: block; font-size: 13px; color: var(--sub); line-height: 1.45; }
+.papi:has(input:checked) { border-color: var(--css); background: var(--css-soft); }
+.pkey { font-size: 12px; font-weight: 700; color: var(--html); background: var(--html-soft); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 .pbtn { appearance: none; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); font: 700 15px var(--font-body); padding: 9px 14px; border-radius: 10px; cursor: pointer; }
 .pbtn:hover { border-color: var(--sub); }
 .pbtn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
@@ -251,7 +265,7 @@ textarea.pin { resize: vertical; }
           <textarea class="pin" id="pMvp" rows="4" placeholder="예: 학생이 칭찬 글을 쓰면 화면에 카드로 바로 보인다. 일단 이것만 되면 돼요."></textarea>
         </div>
         <div class="pbox">
-          <h3><span class="pno">3</span>화면 <small>메인 페이지부터, 필요하면 더 추가하세요</small></h3>
+          <h3><span class="pno">3</span>화면 <small>그림으로 끄적이고 글로도 적어요 · 메인 페이지부터, 필요하면 더 추가</small></h3>
           <div id="pScreens" class="pscreens"></div>
           <button class="pbtn add" id="pAdd">+ 화면 추가</button>
         </div>
@@ -259,6 +273,12 @@ textarea.pin { resize: vertical; }
           <h3><span class="pno">4</span>PRD <small>그 밖에 생각나는 것을 주저리주저리</small></h3>
           <p class="phint">누가 쓰나요? 왜 필요해요? 무엇을 저장하나요? 누가 지울 수 있나요? 이번엔 빼도 되는 건요? 아무 순서로나 적어도 돼요.</p>
           <textarea class="pin" id="pPrd" rows="8" placeholder="예: 우리 반 24명이 아침 활동 시간에 크롬북으로 써요. 칭찬 쪽지를 모으는 데 시간이 너무 걸려서 만들어요. 이름은 저장하지 말고 번호만. 자기 글만 지울 수 있고 선생님은 다 지울 수 있게. 로그인은 이번엔 빼요."></textarea>
+        </div>
+        <div class="pbox">
+          <h3><span class="pno">5</span>필요한 기능·API <small>해당하는 것을 눌러 고르세요</small></h3>
+          <p class="phint">잘 모르겠으면 비워 두세요. AI가 알맞은 것을 골라 줘요. <b class="pkey">키 필요</b> 표시는 가입하고 API 키를 받아야 하는 것(대부분 쓴 만큼 돈이 들어요)이에요.</p>
+          <div class="papis" id="pApis"></div>
+          <input class="pin" id="pApiEtc" placeholder="그 밖에 필요한 것 (예: 날씨 정보, 구글 캘린더에 일정 넣기)">
         </div>
       </div>
       <aside class="plan-out">
@@ -724,18 +744,48 @@ gq.addEventListener("input", () => {
 // ── 내 앱 구상하기 ──
 const PKEY = "plan-sheet-v2";
 const $p = id => document.getElementById(id);
+const P_APIS = [
+  ["ai", "AI가 글을 읽고 답하기", "OpenAI · Claude · Gemini API", true],
+  ["db", "글·점수 저장, 여럿이 함께 보기", "Supabase 데이터베이스", false],
+  ["live", "실시간으로 바로바로 보이기", "Supabase Realtime", false],
+  ["login", "로그인", "구글 로그인 · Supabase Auth", false],
+  ["map", "지도에 표시하기", "Leaflet + OpenStreetMap(무료) · 카카오맵", false],
+  ["neis", "급식·시간표·학사일정", "NEIS 교육정보 개방 포털", true],
+  ["ocr", "손글씨·사진 속 글자 읽기", "OCR (Upstage 등)", true],
+  ["stt", "말을 글자로 받아쓰기", "브라우저 음성 인식(무료)", false],
+  ["tts", "글을 목소리로 읽어 주기", "브라우저 읽기(무료) · OpenAI 음성", false],
+  ["img", "글로 그림 만들기", "이미지 생성 API (gpt-image 등)", true],
+  ["tr", "다른 나라 말로 번역", "구글 번역 API", true],
+  ["qr", "QR 코드 만들기", "qrcode 라이브러리(무료)", false],
+  ["chart", "그래프 그리기", "Chart.js(무료)", false],
+];
 const P_EXAMPLE = {
   title: "친구 칭찬 게시판",
   mvp: "학생이 칭찬 글을 쓰면 화면에 카드로 바로 보인다. 일단 이것만 되면 돼요.",
-  screens: [{ name: "메인 페이지", desc: "위에 칭찬 글 쓰는 칸과 올리기 버튼, 아래에 칭찬 카드가 최신순으로 쌓여요." },
-            { name: "선생님 페이지", desc: "카드 목록이 표로 보이고, 줄마다 지우기 버튼이 있어요." }],
-  prd: "우리 반 24명이 아침 활동 시간에 크롬북으로 써요. 칭찬 쪽지를 모으는 데 시간이 너무 걸려서 만들어요. 이름은 저장하지 말고 번호만. 자기 글만 지울 수 있고 선생님은 다 지울 수 있게. 로그인은 이번엔 빼요."
+  screens: [{ name: "메인 페이지", desc: "위에 칭찬 글 쓰는 칸과 올리기 버튼, 아래에 칭찬 카드가 최신순으로 쌓여요.", strokes: [] },
+            { name: "선생님 페이지", desc: "카드 목록이 표로 보이고, 줄마다 지우기 버튼이 있어요.", strokes: [] }],
+  prd: "우리 반 24명이 아침 활동 시간에 크롬북으로 써요. 칭찬 쪽지를 모으는 데 시간이 너무 걸려서 만들어요. 이름은 저장하지 말고 번호만. 자기 글만 지울 수 있고 선생님은 다 지울 수 있게. 로그인은 이번엔 빼요.",
+  apis: ["db", "live"], apiEtc: ""
 };
-function pBlank() { return { title: "", mvp: "", screens: [{ name: "메인 페이지", desc: "" }], prd: "" }; }
+function pBlank() { return { title: "", mvp: "", screens: [{ name: "메인 페이지", desc: "", strokes: [] }], prd: "", apis: [], apiEtc: "" }; }
 let pData = pBlank();
-try { const s = JSON.parse(localStorage.getItem(PKEY) || "null"); if (s && Array.isArray(s.screens)) pData = s; } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem(PKEY) || "null"); if (s && Array.isArray(s.screens)) pData = { ...pBlank(), ...s }; } catch (e) {}
+pData.screens.forEach(s => s.strokes = s.strokes || []);
+
+$p("pApis").innerHTML = P_APIS.map(([k, what, tool, key]) =>
+  `<label class="papi"><input type="checkbox" data-api="${k}"><span><b>${what}</b><small>${tool}${key ? ' <span class="pkey">키 필요</span>' : ""}</small></span></label>`).join("");
 
 const pEsc = s => esc(s || "").replace(/"/g, "&quot;");
+const PW = 960, PH = 540;
+function pDrawScreen(i) {
+  const cv = $p("pScreens").querySelector(`canvas[data-i="${i}"]`); if (!cv) return;
+  const c = cv.getContext("2d"); c.clearRect(0, 0, PW, PH); c.lineJoin = c.lineCap = "round";
+  for (const st of pData.screens[i].strokes) {
+    c.strokeStyle = st.e ? "#fff" : "#1f2430"; c.globalCompositeOperation = st.e ? "destination-out" : "source-over"; c.lineWidth = st.e ? 28 : 4;
+    c.beginPath(); st.p.forEach(([x, y], j) => j ? c.lineTo(x, y) : c.moveTo(x, y)); if (st.p.length === 1) c.lineTo(st.p[0][0] + .1, st.p[0][1]); c.stroke();
+  }
+  c.globalCompositeOperation = "source-over";
+}
 function pRenderScreens() {
   $p("pScreens").innerHTML = pData.screens.map((s, i) => `
     <div class="pscreen">
@@ -743,23 +793,47 @@ function pRenderScreens() {
         <input class="pin" data-i="${i}" data-f="name" value="${pEsc(s.name)}" placeholder="화면 이름 (예: 선생님 페이지)" aria-label="${i + 1}번 화면 이름">
         ${i ? `<button class="pdel" data-del="${i}" aria-label="${i + 1}번 화면 지우기" title="이 화면 지우기">×</button>` : ""}
       </div>
-      <textarea class="pin" data-i="${i}" data-f="desc" rows="2" placeholder="이 화면에 무엇이 있나요? 예: 위에 글 쓰는 칸, 아래에 카드 목록">${pEsc(s.desc)}</textarea>
+      <div class="psketch">
+        <canvas data-i="${i}" width="${PW}" height="${PH}" aria-label="${i + 1}번 화면 그림판"></canvas>
+        <div class="psk-tools">
+          <button class="pbtn" data-sk="pen" data-i="${i}" aria-pressed="true">✎ 펜</button>
+          <button class="pbtn" data-sk="eraser" data-i="${i}" aria-pressed="false">지우개</button>
+          <button class="pbtn" data-sk="undo" data-i="${i}">되돌리기</button>
+          <button class="pbtn" data-sk="clear" data-i="${i}">다 지우기</button>
+          <button class="pbtn" data-sk="png" data-i="${i}">그림 저장</button>
+          <span>대충 네모로 끄적여도 돼요</span>
+        </div>
+      </div>
+      <textarea class="pin" data-i="${i}" data-f="desc" rows="2" placeholder="글로도 적어 주세요. 예: 위에 글 쓰는 칸, 아래에 카드 목록">${pEsc(s.desc)}</textarea>
     </div>`).join("");
+  pData.screens.forEach((_, i) => pDrawScreen(i));
 }
-function pFill() { $p("pTitle").value = pData.title; $p("pMvp").value = pData.mvp; $p("pPrd").value = pData.prd; pRenderScreens(); }
+function pFill() {
+  $p("pTitle").value = pData.title; $p("pMvp").value = pData.mvp; $p("pPrd").value = pData.prd; $p("pApiEtc").value = pData.apiEtc || "";
+  $p("pApis").querySelectorAll("input").forEach(el => el.checked = pData.apis.includes(el.dataset.api));
+  pRenderScreens();
+}
 function pBuild(d) {
   const L = [`${d.title || "[무엇을 만들까요?]"}을(를) 만들고 싶어.`, ""];
   L.push("[MVP: 먼저 이것만 만들어 줘]", d.mvp || "[제일 먼저 되어야 하는 것]", "");
-  const sc = d.screens.filter(s => s.name || s.desc);
-  if (sc.length) { L.push("[화면]"); sc.forEach((s, i) => L.push(`${i + 1}. ${s.name || "화면"}${s.desc ? ": " + s.desc : ""}`)); L.push(""); }
+  const sc = d.screens.filter(s => s.name || s.desc || s.strokes.length);
+  if (sc.length) {
+    L.push("[화면]"); sc.forEach((s, i) => L.push(`${i + 1}. ${s.name || "화면"}${s.desc ? ": " + s.desc : ""}`));
+    if (sc.some(s => s.strokes.length)) L.push("(화면을 손으로 그린 그림도 같이 올릴게. 그림의 배치를 참고해 줘.)");
+    L.push("");
+  }
   if (d.prd) L.push("[그 밖에 생각한 것]", d.prd, "");
+  const api = P_APIS.filter(a => d.apis.includes(a[0])).map(a => `- ${a[1]} (${a[2]})`);
+  if (d.apiEtc) api.push("- " + d.apiEtc);
+  if (api.length) L.push("[필요한 기능·API]", ...api, "API 키가 필요한 것은 어디서 받는지, 돈이 드는지 먼저 알려 줘.", "");
   L.push("한국어 화면으로, 크롬북과 휴대폰에서 잘 보이게 해 줘. 학생 이름·얼굴·성적은 저장하지 말고, API 키는 화면 코드에 넣지 마. 만들기 전에 궁금한 점이 있으면 먼저 물어봐 줘.");
   return L.join("\n");
 }
 function pUpdate(save = true) {
   $p("pPrompt").textContent = pBuild(pData);
   if (!save) return;
-  try { localStorage.setItem(PKEY, JSON.stringify(pData)); $p("pSaved").textContent = "이 컴퓨터에 저장됨 · " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }); } catch (e) {}
+  try { localStorage.setItem(PKEY, JSON.stringify(pData)); $p("pSaved").textContent = "이 컴퓨터에 저장됨 · " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }); }
+  catch (e) { $p("pSaved").textContent = "저장 공간이 부족해요. 그림을 조금 지워 주세요."; }
 }
 function pToast(t) { let el = document.querySelector(".ptoast"); if (!el) { el = document.createElement("div"); el.className = "ptoast"; document.body.appendChild(el); } el.textContent = t; el.hidden = false; clearTimeout(pToast.t); pToast.t = setTimeout(() => el.hidden = true, 1600); }
 
@@ -768,17 +842,46 @@ $p("pForm").addEventListener("input", e => {
   if (t.id === "pTitle") pData.title = t.value;
   else if (t.id === "pMvp") pData.mvp = t.value;
   else if (t.id === "pPrd") pData.prd = t.value;
-  else if (t.dataset.i) pData.screens[+t.dataset.i][t.dataset.f] = t.value;
+  else if (t.id === "pApiEtc") pData.apiEtc = t.value;
+  else if (t.dataset.api) pData.apis = [...$p("pApis").querySelectorAll("input:checked")].map(x => x.dataset.api);
+  else if (t.dataset.f) pData.screens[+t.dataset.i][t.dataset.f] = t.value;
+  else return;
   pUpdate();
 });
+// 그림판
+const pTool = {}; let pStroke = null;
+function pPos(cv, e) { const r = cv.getBoundingClientRect(); return [Math.round((e.clientX - r.left) * PW / r.width), Math.round((e.clientY - r.top) * PH / r.height)]; }
+$p("pScreens").addEventListener("pointerdown", e => {
+  const cv = e.target.closest("canvas"); if (!cv) return;
+  e.preventDefault(); cv.setPointerCapture(e.pointerId);
+  const i = +cv.dataset.i; pStroke = { i, cv, s: { e: pTool[i] === "eraser" ? 1 : 0, p: [pPos(cv, e)] } };
+  pData.screens[i].strokes.push(pStroke.s); pDrawScreen(i);
+});
+$p("pScreens").addEventListener("pointermove", e => { if (!pStroke) return; pStroke.s.p.push(pPos(pStroke.cv, e)); pDrawScreen(pStroke.i); });
+const pEnd = () => { if (!pStroke) return; pStroke = null; pUpdate(); };
+$p("pScreens").addEventListener("pointerup", pEnd);
+$p("pScreens").addEventListener("pointercancel", pEnd);
 $p("pScreens").addEventListener("click", e => {
-  const i = e.target.dataset.del; if (i === undefined) return;
-  const s = pData.screens[+i];
-  if ((s.name || s.desc) && !confirm(`'${s.name || "이 화면"}'을(를) 지울까요?`)) return;
-  pData.screens.splice(+i, 1); pRenderScreens(); pUpdate();
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.del !== undefined) {
+    const s = pData.screens[+b.dataset.del];
+    if ((s.name || s.desc || s.strokes.length) && !confirm(`'${s.name || "이 화면"}'을(를) 지울까요?`)) return;
+    pData.screens.splice(+b.dataset.del, 1); pRenderScreens(); pUpdate(); return;
+  }
+  const i = +b.dataset.i, sk = b.dataset.sk, s = pData.screens[i]; if (!sk) return;
+  if (sk === "pen" || sk === "eraser") { pTool[i] = sk; b.parentNode.querySelectorAll("[data-sk=pen],[data-sk=eraser]").forEach(x => x.setAttribute("aria-pressed", x === b)); return; }
+  if (sk === "undo") s.strokes.pop();
+  if (sk === "clear") { if (!s.strokes.length || !confirm("이 화면 그림을 모두 지울까요?")) return; s.strokes = []; }
+  if (sk === "png") {
+    const cv = $p("pScreens").querySelector(`canvas[data-i="${i}"]`), c = document.createElement("canvas"); c.width = PW; c.height = PH;
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, PW, PH); x.drawImage(cv, 0, 0);
+    const a = document.createElement("a"); a.download = `${i + 1}_${s.name || "화면"}.png`; a.href = c.toDataURL("image/png"); a.click();
+    pToast("그림을 저장했어요. Claude에 프롬프트와 같이 올리세요"); return;
+  }
+  pDrawScreen(i); pUpdate();
 });
 $p("pAdd").onclick = () => {
-  pData.screens.push({ name: "", desc: "" }); pRenderScreens(); pUpdate();
+  pData.screens.push({ name: "", desc: "", strokes: [] }); pRenderScreens(); pUpdate();
   $p("pScreens").querySelector(`[data-i="${pData.screens.length - 1}"][data-f="name"]`).focus();
 };
 $p("pCopy").onclick = async () => {
@@ -787,7 +890,7 @@ $p("pCopy").onclick = async () => {
 };
 $p("pMd").onclick = () => {
   const d = pData;
-  const md = `# ${d.title || "내 앱"}\n\n## MVP\n${d.mvp}\n\n## 화면\n${d.screens.map((s, i) => `${i + 1}. **${s.name || "화면"}** ${s.desc}`).join("\n")}\n\n## PRD\n${d.prd}\n\n## AI에게 보낼 프롬프트\n\n${pBuild(d)}\n`;
+  const md = `# ${d.title || "내 앱"}\n\n## AI에게 보낼 프롬프트\n\n${pBuild(d)}\n`;
   const a = document.createElement("a"); a.download = (d.title ? d.title.slice(0, 20) : "내앱") + "_구상.md";
   a.href = URL.createObjectURL(new Blob([md], { type: "text/markdown" })); a.click();
 };
@@ -797,7 +900,7 @@ $p("pExample").onclick = () => {
   pData = JSON.parse(JSON.stringify(P_EXAMPLE)); pFill(); pUpdate();
 };
 $p("pReset").onclick = () => {
-  if (!confirm("쓴 내용을 모두 지우고 처음부터 할까요?")) return;
+  if (!confirm("쓴 내용과 그림을 모두 지우고 처음부터 할까요?")) return;
   pData = pBlank(); pFill(); try { localStorage.removeItem(PKEY); } catch (e) {} pUpdate(false); $p("pSaved").textContent = "";
 };
 pFill(); pUpdate(false);
