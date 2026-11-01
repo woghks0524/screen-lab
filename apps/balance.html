@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>선생님 밸런스 게임</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; background: #15132b; color: #fff; min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+  .wrap { width: 100%; max-width: 440px; }
+  .top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #b7b2e0; margin-bottom: 12px; }
+  .live { display: inline-flex; align-items: center; gap: 6px; }
+  .live i { width: 8px; height: 8px; border-radius: 50%; background: #ff4d6d; animation: blink 1.2s infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  h1 { text-align: center; font-size: 15px; letter-spacing: 2px; color: #ffd166; margin-bottom: 14px; }
+  .vs { position: relative; display: grid; gap: 12px; }
+  .side { position: relative; overflow: hidden; border: 0; border-radius: 22px; padding: 26px 18px; min-height: 120px; font-family: inherit; font-size: 19px; font-weight: 800; color: #fff; cursor: pointer; text-align: left; transition: transform .12s; }
+  .side:active { transform: scale(.97); }
+  .side:disabled { cursor: default; }
+  .a { background: linear-gradient(135deg, #ff5e7e, #ff9a5a); }
+  .b { background: linear-gradient(135deg, #4d7cff, #8a5cff); }
+  .side .emo { font-size: 34px; display: block; margin-bottom: 6px; }
+  .side .fill { position: absolute; inset: 0 auto 0 0; background: rgba(255, 255, 255, .28); width: 0; transition: width .8s cubic-bezier(.2, .9, .3, 1); }
+  .side .txt { position: relative; }
+  .side .pct { position: relative; display: none; font-size: 30px; margin-top: 8px; }
+  .shown .pct { display: block; }
+  .mine { outline: 4px solid #ffd166; outline-offset: 3px; }
+  .mine .txt::after { content: " ✓ 내 선택"; font-size: 13px; color: #ffd166; }
+  .badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; width: 46px; height: 46px; border-radius: 50%; background: #15132b; border: 3px solid #ffd166; display: grid; place-items: center; font-weight: 900; color: #ffd166; }
+  .msg { text-align: center; margin-top: 14px; min-height: 44px; font-size: 14px; color: #d8d4ff; line-height: 1.6; }
+  .next { display: block; width: 100%; margin-top: 8px; border: 0; border-radius: 16px; padding: 14px; font-family: inherit; font-size: 16px; font-weight: 800; background: #ffd166; color: #15132b; cursor: pointer; visibility: hidden; }
+  .end { text-align: center; padding: 30px 10px; }
+  .end .big { font-size: 70px; }
+  .end h2 { margin: 10px 0; font-size: 22px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const QS = [
+  ["🍜", "평생 짜장면만 먹기", "🌶️", "평생 짬뽕만 먹기"],
+  ["🤧", "수업 중 재채기 10번 연속", "😵", "수업 중 딸꾹질 30분"],
+  ["🏖️", "방학 2주 더 길게", "💰", "월급 20% 더 많이"],
+  ["📱", "학생들이 내 SNS를 발견", "📒", "내 졸업앨범 사진이 공개"],
+  ["🫥", "하루 1시간 투명 인간", "⏸️", "하루 10분 시간 멈추기"],
+  ["🍰", "회식은 무조건 디저트 카페", "🥩", "회식은 무조건 고깃집"],
+  ["🎤", "연수 중 갑자기 발표 지목", "🎵", "연수 중 갑자기 노래 지목"],
+  ["🌅", "새벽 5시 기상 아침형 인간", "🌙", "새벽 2시 취침 올빼미형"],
+];
+
+const app = document.getElementById("app");
+let n = 0, mine = null, timer = null, major = 0;
+
+async function counts(vote) {
+  const r = await fetch("/api/balance", vote ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(vote) } : {});
+  if (!r.ok) throw new Error();
+  const row = (await r.json()).find((x) => x.question_id === n + 1);
+  return { a: row?.a || 0, b: row?.b || 0 };
+}
+
+function draw() {
+  const [ea, ta, eb, tb] = QS[n];
+  mine = null;
+  app.innerHTML = `
+    <div class="top"><span>Q${n + 1} / ${QS.length}</span><span class="live"><i></i>실시간 집계</span></div>
+    <h1>BALANCE GAME</h1>
+    <div class="vs">
+      <button class="side a" data-k="a"><span class="fill"></span><span class="txt"><span class="emo">${ea}</span>${ta}</span><span class="pct"></span></button>
+      <div class="badge">VS</div>
+      <button class="side b" data-k="b"><span class="fill"></span><span class="txt"><span class="emo">${eb}</span>${tb}</span><span class="pct"></span></button>
+    </div>
+    <p class="msg" id="msg">둘 중 하나만 고를 수 있어요!</p>
+    <button class="next" id="next">${n + 1 < QS.length ? "다음 질문 →" : "결과 보기"}</button>`;
+  app.querySelectorAll(".side").forEach((b) => (b.onclick = () => pick(b.dataset.k)));
+  document.getElementById("next").onclick = () => { clearInterval(timer); n++; n < QS.length ? draw() : end(); };
+}
+
+function show(c) {
+  const total = c.a + c.b || 1;
+  for (const k of ["a", "b"]) {
+    const el = app.querySelector(`.side.${k}`), p = Math.round((c[k] / total) * 100);
+    el.classList.add("shown");
+    el.querySelector(".fill").style.width = p + "%";
+    el.querySelector(".pct").textContent = p + "%";
+  }
+  const same = Math.round((c[mine] / total) * 100);
+  document.getElementById("msg").innerHTML = `지금까지 <b>${c.a + c.b}명</b>이 골랐어요 · 나와 같은 선택 <b>${same}%</b><br>${same >= 50 ? "다수파예요! 😎" : "소수파… 그래도 멋져요 🦄"}`;
+  return same;
+}
+
+async function pick(k) {
+  if (mine) return;
+  mine = k;
+  app.querySelectorAll(".side").forEach((b) => { b.disabled = true; b.classList.toggle("mine", b.dataset.k === k); });
+  document.getElementById("msg").textContent = "다른 선생님들은 뭘 골랐을까…";
+  try {
+    if (show(await counts({ q: n + 1, pick: k })) >= 50) major++;
+    document.getElementById("next").style.visibility = "visible";
+    // 결과를 보는 동안 3초마다 다시 물어봐서, 다른 사람이 고르면 숫자가 바뀌어요
+    timer = setInterval(async () => { try { show(await counts()); } catch {} }, 3000);
+  } catch {
+    document.getElementById("msg").textContent = "투표함에 닿지 못했어요. 잠시 뒤 다시 눌러 주세요.";
+    mine = null; app.querySelectorAll(".side").forEach((b) => { b.disabled = false; b.classList.remove("mine"); });
+  }
+}
+
+function end() {
+  const minor = QS.length - major;
+  app.innerHTML = `<div class="end">
+    <div class="big">${major >= minor ? "🐑" : "🦄"}</div>
+    <h2>${major >= minor ? "대세를 따르는 안정형" : "남다른 길을 걷는 개성파"}</h2>
+    <p class="msg">다수파 ${major}번 · 소수파 ${minor}번</p>
+    <button class="next" style="visibility:visible" id="again">처음부터 다시</button></div>`;
+  document.getElementById("again").onclick = () => { n = 0; major = 0; draw(); };
+}
+
+draw();
+</script>
+</body>
+</html>

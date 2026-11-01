@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나를 급식 메뉴로 표현하면?</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; background: #fff7ec; color: #2b2118; min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+  .card { width: 100%; max-width: 420px; background: #fff; border-radius: 28px; padding: 28px 22px; box-shadow: 0 10px 40px rgba(180, 110, 40, .18); text-align: center; animation: pop .35s ease; }
+  @keyframes pop { from { transform: translateY(12px) scale(.97); opacity: 0; } }
+  .tray { font-size: 44px; letter-spacing: 4px; }
+  .tray span { display: inline-block; animation: bob 1.6s ease-in-out infinite; }
+  .tray span:nth-child(2) { animation-delay: .2s } .tray span:nth-child(3) { animation-delay: .4s } .tray span:nth-child(4) { animation-delay: .6s }
+  @keyframes bob { 50% { transform: translateY(-8px) rotate(-6deg); } }
+  h1 { font-size: 24px; margin: 14px 0 6px; line-height: 1.35; }
+  .sub { color: #8a7563; font-size: 14px; }
+  .btn { display: block; width: 100%; border: 0; border-radius: 16px; padding: 15px 16px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform .1s; }
+  .btn:active { transform: scale(.97); }
+  .main { background: #ff8a3d; color: #fff; margin-top: 22px; box-shadow: 0 5px 0 #d9661f; }
+  .opt { background: #fff3e6; color: #4a3626; margin-top: 10px; text-align: left; border: 2px solid #ffe0c2; }
+  .opt:hover { border-color: #ff8a3d; background: #ffe9d4; }
+  .bar { height: 8px; background: #ffe9d4; border-radius: 99px; overflow: hidden; margin-bottom: 18px; }
+  .bar i { display: block; height: 100%; background: #ff8a3d; border-radius: 99px; transition: width .3s; }
+  .qno { color: #ff8a3d; font-weight: 800; font-size: 13px; }
+  .q { font-size: 20px; font-weight: 800; margin: 6px 0 14px; line-height: 1.4; }
+  .big { font-size: 96px; line-height: 1; margin: 6px 0 4px; animation: spin .7s cubic-bezier(.2, 1.6, .4, 1); }
+  @keyframes spin { from { transform: scale(0) rotate(-180deg); } }
+  .tag { display: inline-block; background: #ff8a3d; color: #fff; border-radius: 99px; padding: 4px 12px; font-size: 13px; font-weight: 700; margin-top: 8px; }
+  .desc { text-align: left; background: #fff7ec; border-radius: 16px; padding: 14px 16px; margin-top: 16px; font-size: 14.5px; line-height: 1.7; }
+  .pair { display: flex; gap: 8px; margin-top: 10px; }
+  .pair div { flex: 1; background: #fff3e6; border-radius: 14px; padding: 10px; font-size: 13px; }
+  .pair b { display: block; font-size: 26px; }
+  .again { background: #fff; color: #ff8a3d; border: 2px solid #ff8a3d; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// 결과 6가지와 질문 8개는 모두 이 파일 안에 적혀 있어요.
+const MENU = {
+  curry:   { e: "🍛", name: "카레", tag: "누구와도 찰떡인 평화주의자", desc: "밥에도, 우동에도, 돈가스에도 어울리는 당신. 어느 모임에 가도 금세 섞여서 분위기를 부드럽게 만들어요. 다만 너무 맞춰 주다 보면 내 맛이 흐려질 수 있으니, 가끔은 매운맛도 보여 주세요!" },
+  tteok:   { e: "🌶️", name: "떡볶이", tag: "매콤한 추진력, 분위기 메이커", desc: "당신이 들어오면 교무실 온도가 2도 올라가요. 즉흥적이지만 그래서 더 재밌는 사람. 오늘 할 일을 오늘 밤에 몰아서 끝내는 놀라운 능력이 있어요." },
+  noodle:  { e: "🍜", name: "잔치국수", tag: "소박하고 따뜻한 국물 같은 사람", desc: "화려하진 않아도 생각나면 꼭 찾게 되는 사람. 말없이 챙겨 주는 다정함이 무기예요. 주말에는 이불 속에서 충전해야 다음 주를 버틸 수 있어요." },
+  chicken: { e: "🍗", name: "치킨", tag: "어딜 가나 인기 스타", desc: "있으면 무조건 반가운 사람! 사람 만나는 걸 좋아하고, 회식 장소도 단톡방 분위기도 당신이 정해요. 가끔은 혼자만의 시간도 꼭 챙겨 주세요." },
+  salad:   { e: "🥗", name: "샐러드", tag: "계획 세우는 게 취미인 사람", desc: "한 달 치 수업 준비가 이미 끝나 있는 당신. 체크리스트에 줄 긋는 순간이 제일 행복해요. 계획에 없던 일이 생겨도 괜찮아요, 드레싱만 바꾸면 되니까요." },
+  pudding: { e: "🍮", name: "푸딩", tag: "겉은 시크, 속은 말랑한 반전 매력", desc: "처음엔 조용해 보이지만 알고 보면 제일 웃긴 사람. 디저트처럼 마지막에 강한 인상을 남겨요. 뒷자리에서 몰래 하는 혼잣말이 사실 명언이에요." },
+};
+const PAIR = { curry: "chicken", tteok: "noodle", noodle: "tteok", chicken: "curry", salad: "pudding", pudding: "salad" };
+
+const QUIZ = [
+  ["출근길의 나는?", [["5분 일찍 도착해서 커피 한 잔", "salad curry"], ["종 치기 1분 전 슬라이딩", "tteok pudding"]]],
+  ["회식 메뉴를 정할 때", [["\"아무거나 좋아요~\"", "curry noodle"], ["맛집 목록을 이미 뽑아 옴", "salad chicken"]]],
+  ["학생이 장난을 쳤을 때", [["같이 빵 터지고 넘어간다", "tteok chicken"], ["조용히… 눈빛으로 말한다", "pudding salad"]]],
+  ["기다리던 주말이 왔다!", [["약속으로 꽉꽉 채운다", "chicken tteok"], ["이불 밖은 위험해", "noodle pudding"]]],
+  ["옆자리 동료가 힘들어 보일 때", [["간식을 책상에 슬쩍 두고 간다", "noodle curry"], ["\"무슨 일 있어요?\" 바로 묻는다", "chicken tteok"]]],
+  ["나의 수업 준비 스타일은", [["한 달 치를 미리 완성", "salad curry"], ["영감은 전날 밤에 온다", "pudding tteok"]]],
+  ["연수에 왔다. 내가 앉는 자리는?", [["맨 앞자리, 눈 맞춤 가능", "salad chicken"], ["문 가까운 뒷자리", "pudding noodle"]]],
+  ["나를 한 단어로 고르면", [["든든함", "curry noodle"], ["짜릿함", "tteok pudding"], ["반짝임", "chicken salad"]]],
+];
+
+const app = document.getElementById("app");
+let n = 0, score = {};
+
+function start() {
+  app.innerHTML = `<div class="card">
+    <div class="tray"><span>🍛</span><span>🌶️</span><span>🍜</span><span>🍗</span></div>
+    <h1>나를 급식 메뉴로<br>표현하면?</h1>
+    <p class="sub">질문 8개 · 1분이면 끝나요</p>
+    <button class="btn main" id="go">시작하기</button>
+  </div>`;
+  document.getElementById("go").onclick = () => { n = 0; score = {}; ask(); };
+}
+
+function ask() {
+  const [q, opts] = QUIZ[n];
+  app.innerHTML = `<div class="card">
+    <div class="bar"><i style="width:${(n / QUIZ.length) * 100}%"></i></div>
+    <p class="qno">Q${n + 1} / ${QUIZ.length}</p>
+    <p class="q">${q}</p>
+    ${opts.map(([t], i) => `<button class="btn opt" data-i="${i}">${t}</button>`).join("")}
+  </div>`;
+  app.querySelectorAll(".opt").forEach((b) => (b.onclick = () => {
+    opts[b.dataset.i][1].split(" ").forEach((k, rank) => (score[k] = (score[k] || 0) + (rank ? 1 : 2)));
+    n++;
+    n < QUIZ.length ? ask() : result();
+  }));
+}
+
+function result() {
+  const k = Object.keys(MENU).sort((a, b) => (score[b] || 0) - (score[a] || 0))[0];
+  const m = MENU[k], p = MENU[PAIR[k]];
+  app.innerHTML = `<div class="card">
+    <p class="sub">당신을 급식 메뉴로 표현하면…</p>
+    <div class="big">${m.e}</div>
+    <h1>${m.name}</h1>
+    <span class="tag">${m.tag}</span>
+    <p class="desc">${m.desc}</p>
+    <div class="pair">
+      <div><b>${p.e}</b>찰떡궁합<br><strong>${p.name}</strong></div>
+      <div><b>🥛</b>같이 먹으면<br><strong>우유 필수</strong></div>
+    </div>
+    <button class="btn again" id="re">다시 해 보기</button>
+  </div>`;
+  document.getElementById("re").onclick = start;
+}
+
+start();
+</script>
+</body>
+</html>

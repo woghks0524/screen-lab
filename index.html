@@ -298,7 +298,7 @@ textarea.pin { resize: vertical; }
     <button class="pagebtn" data-page="spot"><span class="pn">2</span><span>틀린 그림 찾기<small>JS 있고 없고 · 코드 / DB / API</small></span></button>
     <button class="pagebtn" data-page="glos"><span class="pn">3</span><span>용어 사전<small>부록 1~5 · 낱말 찾기</small></span></button>
     <button class="pagebtn" data-page="plan"><span class="pn">4</span><span>내 앱 구상하기<small>MVP · 화면 · PRD → AI 프롬프트</small></span></button>
-    <button class="pagebtn" data-page="api"><span class="pn">5</span><span>API 이해하기<small>작은 앱 10개 · 어떤 API를 썼을까?</small></span></button>
+    <button class="pagebtn" data-page="api"><span class="pn">5</span><span>API 이해하기<small>작은 앱 15개 · 어떤 API를 썼을까?</small></span></button>
   </nav>
 
   <section class="plan pg-plan" aria-label="내 앱 구상하기" hidden>
@@ -1471,7 +1471,56 @@ $("rs").onclick = function () { stop("시작"); left = 180; show(); };`,
 setInterval(() => {
   left--;                         // 1초마다 1씩 빼기
   clock.textContent = toMMSS(left);
-}, 1000);                         // 바깥에 물어볼 게 없어요` }
+}, 1000);                         // 바깥에 물어볼 게 없어요` },
+
+// 11~15: 요즘 사람들이 재미로 하는 진짜 앱. apps/ 폴더의 html 파일이고, DB·AI도 진짜로 불러요.
+{ t: "나를 급식 메뉴로 표현하면?", src: "/apps/menu-test.html", ans: "none", opts: ["ai", "supa", "none", "google"],
+  try: "끝까지 해 보고 결과를 보세요. 다시 해서 다르게 골라 보세요.",
+  why: "SNS에서 유행하는 성격 유형 테스트는 대부분 API가 하나도 없어요. 질문 8개, 결과 6개, '이 답을 고르면 몇 점'이라는 점수표가 전부 이 파일 안에 적혀 있고, 마지막에 점수가 가장 높은 결과를 보여 줄 뿐이에요. AI가 나를 분석한 것 같지만 결과는 미리 써 둔 글이에요. 다만 '이 결과가 나온 사람이 전체의 몇 %인지' 같은 통계를 보여 주려면 모두의 결과를 모아 둘 DB가 필요해져요.",
+  code: `const QUIZ = [
+  ["출근길의 나는?", [["5분 일찍 도착", "salad curry"], ["종 치기 1분 전 슬라이딩", "tteok pudding"]]],
+  …
+];
+// 고를 때마다 점수 더하기 → 가장 높은 메뉴가 결과
+opts.split(" ").forEach((k, rank) => score[k] += rank ? 1 : 2);
+const best = Object.keys(MENU).sort((a, b) => score[b] - score[a])[0];` },
+{ t: "선생님 밸런스 게임", src: "/apps/balance.html", ans: "supa", opts: ["none", "supa", "ai", "google"],
+  try: "하나를 고르고 퍼센트를 보세요. 옆 선생님도 같은 문제를 고르면 숫자가 바뀌어요.",
+  why: "내가 고른 것만 기억하면 API가 필요 없지만, '다른 선생님들은 몇 %나 골랐나'를 보려면 모두의 선택을 한곳에 모아야 해요. 그 한곳이 DB(Supabase의 lab_balance 표)예요. 고를 때마다 한 줄씩 쌓고, 화면은 3초마다 '지금 몇 대 몇이야?'를 다시 물어봐요. DB 키는 화면 코드에 넣지 않고 서버 함수(/api/balance)가 대신 DB와 이야기해요.",
+  code: `// 한 표 넣기 → 서버 함수가 Supabase 표에 한 줄 추가
+await fetch("/api/balance", { method: "POST",
+  body: JSON.stringify({ q: 3, pick: "a" }) });
+
+// 3초마다 다시 물어보기
+setInterval(() => fetch("/api/balance").then(…), 3000);
+// → [{ "question_id": 3, "a": 41, "b": 17 }, …]` },
+{ t: "롤링페이퍼", src: "/apps/rolling.html", ans: "supa", opts: ["google", "none", "ai", "supa"],
+  try: "받는 사람을 정해 만들고 쪽지를 붙여 보세요. QR을 휴대폰으로 찍어서 휴대폰에서도 써 보세요.",
+  why: "쪽지가 새로고침해도 남고 다른 사람 화면에도 보이려면 DB가 있어야 해요. 롤링페이퍼마다 6글자 번호가 생기고, 그 번호가 들어간 링크(…?b=번호)로 들어온 사람들이 같은 판의 쪽지를 읽고 써요. 로그인 없이도 링크만 알면 쓸 수 있는 이유예요(대신 링크를 아는 누구나 쓸 수 있어요). 휴대폰으로 찍는 QR 그림은 QR 코드 API가 만들어 준 덤이에요.",
+  code: `// 주소에서 판 번호 꺼내기: rolling.html?b=k3x9qa
+const board = new URLSearchParams(location.search).get("b");
+
+// 그 판의 쪽지 불러오기 (서버 함수 → Supabase lab_rolling_msgs 표)
+fetch("/api/rolling?b=" + board)
+// → { "board": { "to_name": "김선생님" }, "msgs": [{ "from_name": "…", "text": "…" }] }` },
+{ t: "AI 오늘의 운세 · 이름 삼행시", src: "/apps/fortune.html", ans: "ai", opts: ["none", "tts", "ai", "trans"],
+  try: "내 이름을 넣고 운세와 삼행시를 받아 보세요. 같은 이름으로 한 번 더 눌러 보세요.",
+  why: "같은 이름인데 누를 때마다 다른 글이 나오죠? 미리 써 둔 운세 중에 하나를 고르는 게 아니라, AI가 그때그때 새 글을 지어내기 때문이에요. 브라우저는 우리 서버 함수(/api/fortune)에 이름만 보내고, 서버가 OpenAI 키를 붙여 '이 이름으로 운세 4줄 써 줘'라는 프롬프트를 보내요. 키가 서버에만 있어서 F12로 봐도 안 보여요. 대신 누를 때마다 조금씩 돈이 들어요.",
+  code: `// 서버 함수(api/fortune.js) 안: 키는 Vercel 환경변수에만
+fetch("https://api.openai.com/v1/chat/completions", {
+  headers: { Authorization: "Bearer " + process.env.OPENAI_API_KEY },
+  body: JSON.stringify({ model: "gpt-5.4-mini",
+    messages: [{ role: "user", content: "김하늘 님의 오늘의 운세를 4줄로…" }] }) });` },
+{ t: "오늘 뭐 입지?", src: "/apps/outfit.html", ans: "weather", opts: ["ai", "map", "weather", "none"],
+  try: "도시를 바꿔 보세요. 기온과 옷차림이 도시마다 달라져요.",
+  why: "지금 그 도시의 진짜 기온과 비 올 확률은 날씨 API에서 받아 와요(여기서는 키 없이 쓰는 무료 날씨 API Open-Meteo를 썼고, 기상청 API도 같은 방식이에요). 옷차림 추천은 AI가 아니라 '체감 28도 이상이면 민소매·반바지' 같은 규칙표예요. 받아 온 숫자를 규칙표에 대 보기만 하면 되니 AI가 필요 없고, 돈도 안 들고, 늘 같은 기준으로 답해요.",
+  code: `// 날씨 API: 위도·경도를 넣으면 JSON으로
+fetch("https://api.open-meteo.com/v1/forecast?latitude=37.57&longitude=126.98&current=apparent_temperature")
+// → { "current": { "apparent_temperature": 21.4 } }
+
+// 옷차림은 규칙표에서 찾기
+const LOOK = [[28, "민소매·반바지"], [23, "반팔"], [20, "얇은 긴팔"], …];
+const look = LOOK.find(([min]) => feel >= min);` }
 ];
 
 let aqI = 0, aqPick = {};

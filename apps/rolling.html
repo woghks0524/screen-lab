@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>롤링페이퍼</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #3b2f2a; min-height: 100vh; padding: 16px;
+    background: #f3ead9 radial-gradient(#e2d4bb 1.2px, transparent 1.2px) 0 0 / 18px 18px; }
+  .wrap { max-width: 620px; margin: 0 auto; }
+  .card { background: #fff; border-radius: 24px; padding: 24px 20px; box-shadow: 0 8px 30px rgba(120, 90, 50, .15); }
+  .home { max-width: 380px; margin: 6vh auto 0; text-align: center; }
+  .home .big { font-size: 64px; }
+  h1 { font-size: 22px; margin: 8px 0 6px; }
+  .sub { color: #8d7b6d; font-size: 14px; line-height: 1.6; }
+  input, textarea { width: 100%; font-family: inherit; font-size: 15px; border: 2px solid #eadfcd; border-radius: 14px; padding: 11px 13px; outline: none; background: #fffdf8; }
+  input:focus, textarea:focus { border-color: #e8836b; }
+  .btn { border: 0; border-radius: 14px; padding: 13px 18px; font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer; background: #e8836b; color: #fff; box-shadow: 0 4px 0 #c4634c; }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #c4634c; }
+  .home input { margin-top: 18px; text-align: center; }
+  .home .btn { width: 100%; margin-top: 10px; }
+  .head { text-align: center; margin-bottom: 14px; }
+  .head h1 { font-size: 24px; }
+  .share { display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 18px; padding: 12px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(120, 90, 50, .1); }
+  .share img { width: 84px; height: 84px; border-radius: 10px; flex: none; }
+  .share code { display: block; word-break: break-all; font-size: 12px; background: #f6efe3; border-radius: 8px; padding: 6px 8px; margin-top: 6px; user-select: all; }
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; min-height: 120px; }
+  .note { position: relative; padding: 16px 14px 12px; border-radius: 4px 4px 18px 4px; font-size: 14.5px; line-height: 1.55; box-shadow: 0 6px 14px rgba(0, 0, 0, .1); animation: stick .4s cubic-bezier(.2, 1.5, .4, 1); word-break: break-word; }
+  .note::before { content: ""; position: absolute; top: -8px; left: 50%; width: 46px; height: 16px; transform: translateX(-50%) rotate(-3deg); background: rgba(255, 255, 255, .6); }
+  .note .from { display: block; margin-top: 8px; font-size: 12px; font-weight: 800; opacity: .7; text-align: right; }
+  @keyframes stick { from { transform: scale(.4) rotate(12deg); opacity: 0; } }
+  .yellow { background: #fff1a8; } .pink { background: #ffd0dc; } .mint { background: #c9f2dc; } .sky { background: #cfe6ff; } .lilac { background: #e3d6ff; }
+  .empty { grid-column: 1 / -1; text-align: center; color: #a8968a; padding: 30px 0; font-size: 14px; }
+  .write { margin-top: 18px; }
+  .write .row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+  .write .row input { flex: 1; }
+  .colors { display: flex; gap: 6px; }
+  .colors button { width: 28px; height: 28px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; }
+  .colors button.on { border-color: #3b2f2a; }
+  .err { color: #c4442a; font-size: 13px; margin-top: 6px; min-height: 18px; }
+  .count { font-size: 13px; color: #8d7b6d; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const app = document.getElementById("app");
+const board = new URLSearchParams(location.search).get("b");
+const COLORS = ["yellow", "pink", "mint", "sky", "lilac"];
+let color = COLORS[Math.floor(Math.random() * COLORS.length)];
+let seen = 0;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const post = (data) => fetch("/api/rolling", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }).then(async (r) => ({ ok: r.ok, ...(await r.json()) }));
+
+// 1) 링크에 판 번호(?b=…)가 없으면: 새 롤링페이퍼 만들기
+function home() {
+  app.innerHTML = `<div class="card home">
+    <div class="big">💌</div>
+    <h1>롤링페이퍼 만들기</h1>
+    <p class="sub">받는 사람 이름만 쓰면 바로 만들어져요.<br>링크를 나눠 주면 모두가 한 장에 써요.</p>
+    <input id="to" maxlength="12" placeholder="누구에게? (예: 김선생님)">
+    <button class="btn" id="make">롤링페이퍼 만들기</button>
+    <p class="err" id="err"></p></div>`;
+  const make = async () => {
+    const to = document.getElementById("to").value.trim();
+    if (!to) return (document.getElementById("err").textContent = "받는 사람 이름을 써 주세요");
+    const r = await post({ action: "board", to }).catch(() => ({}));
+    if (!r.id) return (document.getElementById("err").textContent = r.error || "만들지 못했어요. 다시 눌러 주세요");
+    location.search = "?b=" + r.id; // 판 번호가 들어간 주소로 이동해요
+  };
+  document.getElementById("make").onclick = make;
+  document.getElementById("to").onkeydown = (e) => e.key === "Enter" && make();
+}
+
+// 2) 링크에 판 번호가 있으면: 그 롤링페이퍼를 열고, 쪽지 붙이기
+async function open() {
+  const link = location.href.split("#")[0];
+  app.innerHTML = `<div class="head"><p class="sub">💌 롤링페이퍼</p><h1 id="title">불러오는 중…</h1><p class="count" id="count"></p></div>
+    <div class="share">
+      <img alt="이 롤링페이퍼로 오는 QR 코드" src="https://api.qrserver.com/v1/create-qr-code/?size=168x168&margin=6&data=${encodeURIComponent(link)}">
+      <div><b>📱 휴대폰으로 찍으면 같이 쓸 수 있어요</b><code>${esc(link)}</code></div>
+    </div>
+    <div class="board" id="board"></div>
+    <div class="card write">
+      <textarea id="text" rows="2" maxlength="120" placeholder="하고 싶은 말을 적어 주세요 (120자까지)"></textarea>
+      <div class="row">
+        <input id="from" maxlength="12" placeholder="보내는 사람">
+        <div class="colors">${COLORS.map((c) => `<button class="${c}${c === color ? " on" : ""}" data-c="${c}" aria-label="${c}"></button>`).join("")}</div>
+        <button class="btn" id="send">붙이기</button>
+      </div>
+      <p class="err" id="err"></p>
+    </div>`;
+  app.querySelectorAll(".colors button").forEach((b) => (b.onclick = () => {
+    color = b.dataset.c;
+    app.querySelectorAll(".colors button").forEach((x) => x.classList.toggle("on", x === b));
+  }));
+  document.getElementById("send").onclick = send;
+  await load();
+  setInterval(load, 4000); // 4초마다 새 쪽지가 있는지 다시 물어봐요
+}
+
+async function load() {
+  const r = await fetch("/api/rolling?b=" + encodeURIComponent(board)).then((x) => x.json()).catch(() => null);
+  if (!r) return;
+  if (r.error) { document.getElementById("title").textContent = r.error; return; }
+  document.getElementById("title").textContent = `${r.board.to_name}에게`;
+  document.getElementById("count").textContent = `쪽지 ${r.msgs.length}장`;
+  if (r.msgs.length === seen && seen) return;
+  seen = r.msgs.length;
+  document.getElementById("board").innerHTML = r.msgs.length
+    ? r.msgs.map((m, i) => `<div class="note ${m.color}" style="transform:rotate(${((i * 37) % 7) - 3}deg)">${esc(m.text)}<span class="from">— ${esc(m.from_name)}</span></div>`).join("")
+    : `<p class="empty">아직 쪽지가 없어요. 첫 쪽지를 붙여 주세요! ✏️</p>`;
+}
+
+async function send() {
+  const text = document.getElementById("text").value.trim(), from = document.getElementById("from").value.trim();
+  const err = document.getElementById("err");
+  if (!text || !from) return (err.textContent = "쪽지 내용과 보내는 사람을 써 주세요");
+  err.textContent = "";
+  const r = await post({ action: "msg", b: board, from, text, color }).catch(() => ({}));
+  if (!r.ok) return (err.textContent = r.error || "붙이지 못했어요. 다시 눌러 주세요");
+  document.getElementById("text").value = "";
+  await load();
+}
+
+board ? open() : home();
+</script>
+</body>
+</html>

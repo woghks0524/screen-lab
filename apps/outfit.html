@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오늘 뭐 입지?</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #1d2b3a; min-height: 100vh; padding: 16px; background: linear-gradient(180deg, var(--sky1, #9fd3ff), var(--sky2, #e8f5ff)); transition: background .6s; }
+  .wrap { max-width: 420px; margin: 0 auto; text-align: center; }
+  h1 { font-size: 22px; margin: 4px 0 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .chips button { border: 0; border-radius: 99px; padding: 7px 13px; font-family: inherit; font-size: 14px; font-weight: 700; background: rgba(255, 255, 255, .7); color: #1d2b3a; cursor: pointer; }
+  .chips button.on { background: #1d2b3a; color: #fff; }
+  .card { background: rgba(255, 255, 255, .85); border-radius: 26px; padding: 20px; margin-top: 14px; box-shadow: 0 10px 30px rgba(30, 60, 90, .15); }
+  .now { display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .now .sky { font-size: 54px; }
+  .now .t { font-size: 46px; font-weight: 900; line-height: 1; }
+  .now .f { font-size: 13px; color: #5b6b7c; margin-top: 4px; }
+  .range { font-size: 13px; color: #5b6b7c; margin-top: 8px; }
+  .look { margin-top: 18px; padding: 16px 10px; background: #f4f8fc; border-radius: 20px; }
+  .look .items { font-size: 46px; letter-spacing: 6px; }
+  .look .items span { display: inline-block; animation: drop .5s cubic-bezier(.2, 1.6, .4, 1) backwards; }
+  @keyframes drop { from { transform: translateY(-30px) scale(.5); opacity: 0; } }
+  .look h2 { font-size: 19px; margin-top: 10px; }
+  .look p { font-size: 14px; color: #44566a; margin-top: 4px; line-height: 1.6; }
+  .tips { text-align: left; margin-top: 12px; display: grid; gap: 6px; }
+  .tips div { background: #fff8e1; border-radius: 12px; padding: 9px 12px; font-size: 13.5px; }
+  .loading { padding: 50px 0; color: #5b6b7c; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>👕 오늘 뭐 입지?</h1>
+  <div class="chips" id="chips"></div>
+  <div class="card" id="card"><p class="loading">도시를 골라 주세요</p></div>
+</div>
+<script>
+const CITY = { 서울: [37.57, 126.98], 인천: [37.46, 126.71], 강릉: [37.75, 128.88], 대전: [36.35, 127.38], 대구: [35.87, 128.6], 광주: [35.16, 126.85], 부산: [35.18, 129.08], 제주: [33.5, 126.53] };
+const SKY = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 71: "🌨️", 73: "🌨️", 75: "❄️", 80: "🌦️", 81: "🌧️", 82: "⛈️", 95: "⛈️", 96: "⛈️", 99: "⛈️" };
+
+// 옷차림 규칙: 체감 온도가 이 숫자 이상이면 이 옷 (위에서부터 차례로 맞춰 봐요)
+const LOOK = [
+  [28, "🎽🩳🩴", "민소매 · 반바지 · 샌들", "가만히 있어도 녹아내리는 날 🫠 시원한 게 최고!", ["#ffb36b", "#fff1d6"]],
+  [23, "👕👖🧢", "반팔 · 얇은 바지", "딱 기분 좋은 여름 날씨. 모자 하나 챙기면 완벽!", ["#7cc8ff", "#e9f7ff"]],
+  [20, "👔👖👟", "얇은 긴팔 · 셔츠", "걷기 좋은 날! 소매만 살짝 걷으면 돼요.", ["#8fd6c4", "#eefbf6"]],
+  [17, "👚🧶👖", "맨투맨 · 얇은 가디건", "아침저녁은 살짝 쌀쌀해요. 가디건은 가방에!", ["#a6c8ff", "#eef4ff"]],
+  [12, "🧥👖🥾", "재킷 · 니트", "겉옷이 꼭 필요한 날. 따뜻한 커피가 당겨요 ☕", ["#b8b3e6", "#f1effc"]],
+  [5, "🧥🧣👢", "코트 · 목도리 · 내복", "코끝이 시려요. 목도리 하나로 체감 5도 올리기!", ["#9fb4cf", "#eef2f7"]],
+  [-99, "🧥🧣🧤", "패딩 · 목도리 · 장갑", "밖은 냉동실이에요 🥶 최대한 껴입고 나가요!", ["#8ea6c4", "#e6edf5"]],
+];
+
+const chips = document.getElementById("chips"), card = document.getElementById("card");
+chips.innerHTML = Object.keys(CITY).map((c) => `<button data-c="${c}">${c}</button>`).join("");
+chips.querySelectorAll("button").forEach((b) => (b.onclick = () => show(b.dataset.c)));
+
+async function show(city) {
+  chips.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.c === city));
+  card.innerHTML = `<p class="loading">${city} 하늘을 올려다보는 중… ☁️</p>`;
+  const [lat, lng] = CITY[city];
+  try {
+    // 날씨 API: 위도·경도를 주소에 넣으면 지금 날씨를 JSON으로 돌려줘요(키 없이 무료)
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul&forecast_days=1`);
+    if (!r.ok) throw new Error();
+    const w = await r.json(), c = w.current, d = w.daily;
+    const feel = Math.round(c.apparent_temperature), hi = Math.round(d.temperature_2m_max[0]), lo = Math.round(d.temperature_2m_min[0]), rain = d.precipitation_probability_max[0] ?? 0;
+    const [, items, name, line, sky] = LOOK.find((l) => feel >= l[0]);
+    document.body.style.setProperty("--sky1", sky[0]); document.body.style.setProperty("--sky2", sky[1]);
+    const tips = [];
+    if (rain >= 50) tips.push(`☂️ 비 올 확률 ${rain}% — 우산 꼭 챙겨요!`);
+    else if (rain >= 30) tips.push(`🌂 비 올 확률 ${rain}% — 접는 우산이면 마음이 편해요`);
+    if (hi - lo >= 10) tips.push(`🌡️ 일교차 ${hi - lo}도! 겉옷을 하나 더 챙겨요`);
+    if (c.wind_speed_10m >= 20) tips.push(`💨 바람이 세요(${Math.round(c.wind_speed_10m)}km/h). 모자는 꽉!`);
+    if (!tips.length) tips.push("😊 특별히 챙길 건 없어요. 좋은 하루 보내요!");
+    card.innerHTML = `
+      <div class="now"><span class="sky">${SKY[c.weather_code] ?? "🌍"}</span><div><div class="t">${Math.round(c.temperature_2m)}°</div><div class="f">체감 ${feel}°</div></div></div>
+      <p class="range">${city} 오늘 최고 ${hi}° · 최저 ${lo}°</p>
+      <div class="look">
+        <div class="items">${[...items].filter((x) => x.trim()).map((e, i) => `<span style="animation-delay:${i * 0.12}s">${e}</span>`).join("")}</div>
+        <h2>${name}</h2><p>${line}</p>
+      </div>
+      <div class="tips">${tips.map((t) => `<div>${t}</div>`).join("")}</div>`;
+  } catch {
+    card.innerHTML = `<p class="loading">날씨를 받아 오지 못했어요. 다시 눌러 주세요.</p>`;
+  }
+}
+show("서울");
+</script>
+</body>
+</html>
