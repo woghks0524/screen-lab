@@ -123,8 +123,8 @@ textarea.code:focus-visible { box-shadow: inset 0 0 0 2px var(--js); }
 .say { background: var(--paper); border: 1px dashed var(--line); border-radius: 12px; padding: 16px 20px; display: grid; gap: 6px; }
 
 /* 페이지 전환 */
-.pagenav { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; }
-@media (max-width: 1100px) { .pagenav { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pagenav { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; }
+@media (max-width: 1300px) { .pagenav { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 900px) { .pagenav { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .pagenav { grid-template-columns: 1fr; } }
 .pagebtn { appearance: none; cursor: pointer; text-align: left; border: 2px solid var(--line); background: var(--paper); color: var(--sub); border-radius: 14px; padding: 10px 14px; font: 800 18px/1.3 var(--font-display); display: flex; gap: 10px; align-items: center; }
@@ -406,6 +406,20 @@ textarea.pin { resize: vertical; }
 @keyframes mo-cube { from { transform: rotateX(-20deg) rotateY(0); } to { transform: rotateX(-20deg) rotateY(360deg); } }
 .mo-cf { position: absolute; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; }
 .mo-rm { display: flex; gap: 10px; align-items: center; }
+
+/* Unity 체험 */
+.unityp { display: grid; gap: 22px; }
+.un-play { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 1000px) { .un-play { grid-template-columns: 1fr; } }
+.un-frame { position: relative; aspect-ratio: 16 / 10; border-radius: 14px; overflow: hidden; background: #1f2430; border: 1px solid var(--line); }
+.un-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+.un-start { appearance: none; position: absolute; inset: 0; border: 0; cursor: pointer; color: #fff; display: grid; place-content: center; gap: 8px; text-align: center;
+  background: radial-gradient(circle at 50% 40%, #3a5fb0, #1f2430 70%); font: 800 30px var(--font-display); }
+.un-start small { font: 500 15px var(--font-body); opacity: .8; }
+.un-start:focus-visible { outline: 3px solid var(--css); outline-offset: -3px; }
+.un-side { display: grid; gap: 14px; }
+.un-list { padding-left: 18px; display: grid; gap: 4px; line-height: 1.6; }
+.un-code { white-space: pre; }
 .mo-steps { padding-left: 22px; display: grid; gap: 6px; line-height: 1.7; }
 .mo-note { background: var(--js-soft); border-radius: 10px; padding: 10px 14px; margin-top: 10px; }
 </style>
@@ -423,7 +437,8 @@ textarea.pin { resize: vertical; }
     <button class="pagebtn" data-page="glos"><span class="pn">3</span><span>용어 사전<small>부록 1~5 · 낱말 찾기</small></span></button>
     <button class="pagebtn" data-page="plan"><span class="pn">4</span><span>내 앱 구상하기<small>MVP · 화면 · PRD → AI 프롬프트</small></span></button>
     <button class="pagebtn" data-page="api"><span class="pn">5</span><span>API 이해하기<small>작은 앱 15개 · 어떤 API를 썼을까?</small></span></button>
-    <button class="pagebtn" data-page="motion"><span class="pn">6</span><span>움직이는 화면<small>모션 용어 34가지 · Unity·게임 엔진</small></span></button>
+    <button class="pagebtn" data-page="motion"><span class="pn">6</span><span>움직이는 화면<small>모션 용어 34가지 · AI에게 부탁하기</small></span></button>
+    <button class="pagebtn" data-page="unity"><span class="pn">7</span><span>Unity 체험<small>Unity 게임 해 보기 · 엔진 고르기</small></span></button>
   </nav>
 
   <section class="plan pg-plan" aria-label="내 앱 구상하기" hidden>
@@ -612,58 +627,96 @@ fetch("https://screen-lab-ten.vercel.app/api/quiz")
     <div class="mo-top" id="moTop"></div>
     <div id="moSecs" style="display:grid;gap:30px"></div>
 
-    <section class="mo-sec" id="mo-unity">
-      <h3>더 나아가기: Unity로 만드는 게임·3D·VR</h3>
-      <p>웹 모션보다 큰 움직임, 그러니까 물체가 떨어지고 부딪히는 물리, 걸어 다니는 3D 세계, VR·AR이 필요하면 게임 엔진을 써요. Unity는 그중 가장 널리 쓰이는 엔진이에요.</p>
+  </section>
 
-      <div class="gblock"><h4>Unity로 만든 유명한 게임·앱</h4>
-        <table class="gtab"><thead><tr><th>이름</th><th>종류</th><th>Unity로 이런 것도 돼요</th></tr></thead><tbody>
-          <tr><td>포켓몬 GO</td><td>위치 기반 AR 게임</td><td>카메라에 비친 진짜 길 위에 캐릭터를 띄워요 (AR)</td></tr>
-          <tr><td>어몽 어스</td><td>2D 온라인 추리 게임</td><td>여러 사람이 한 방에서 실시간으로 같이 놀아요 (멀티플레이)</td></tr>
-          <tr><td>원신</td><td>3D 오픈 월드 RPG</td><td>넓은 3D 세계를 PC·휴대폰·게임기로 함께 내보내요 (여러 기기)</td></tr>
-          <tr><td>할로우 나이트</td><td>2D 액션 게임</td><td>손그림 같은 2D 게임도 Unity로 만들어요 (2D)</td></tr>
-          <tr><td>모뉴먼트 밸리</td><td>3D 착시 퍼즐</td><td>작은 팀도 아름다운 3D 퍼즐을 만들어요 (소규모 제작)</td></tr>
-          <tr><td>비트 세이버</td><td>VR 리듬 게임</td><td>VR 기기를 쓰고 손을 휘둘러 놀아요 (VR)</td></tr>
-        </tbody></table>
-        <p class="tnote">모두 Unity 엔진으로 만든 것으로 널리 알려진 게임이에요.</p>
+  <section class="unityp pg-unity" aria-label="Unity 체험" hidden>
+    <div>
+      <h2>Unity 체험</h2>
+      <p class="lead">웹 모션보다 큰 움직임, 그러니까 물체가 떨어지고 부딪히는 물리, 걸어 다니는 3D 세계, VR·AR이 필요하면 게임 엔진을 써요. Unity는 그중 가장 널리 쓰이는 엔진이에요. 아래 게임은 진짜 Unity 6로 만들어 웹으로 내보낸 거예요.</p>
+    </div>
+    <div class="un-play">
+      <div class="un-frame">
+        <iframe id="unFrame" title="Unity 공 굴리기 게임" allow="fullscreen" hidden></iframe>
+        <button class="un-start" id="unStart"><b>▶ 게임 시작</b><small>처음 한 번은 17MB쯤 받느라 몇 초 걸려요</small></button>
       </div>
+      <div class="un-side">
+        <div class="pbox"><h3>조작법</h3>
+          <ul class="un-list"><li><b>방향키·WASD</b> 공 굴리기 (휴대폰·태블릿은 가고 싶은 쪽 화면을 꾹 누르기)</li><li><b>스페이스</b> 점프 · 보라색 경사로로 날아 보세요</li><li><b>목표</b> 노란 별 8개 모으기, 주황 상자 탑 무너뜨리기</li><li><b>R</b> 처음부터 다시</li></ul>
+          <p class="phint">키보드가 안 먹으면 게임 화면을 한 번 눌러 주세요.</p>
+        </div>
+        <div class="pbox"><h3>이 게임 속 Unity 낱말</h3>
+          <table class="gtab"><tbody>
+            <tr><td>게임 오브젝트</td><td>장면 안의 모든 물체. 공, 별, 상자, 벽, 카메라</td></tr>
+            <tr><td>Rigidbody</td><td>무게와 중력을 주는 부품. 공이 구르고 상자 탑이 무너져요</td></tr>
+            <tr><td>Collider · 트리거</td><td>부딪힘을 맡는 부품. 별은 '트리거'라 통과하면서 닿은 것만 알려 줘요</td></tr>
+            <tr><td>스크립트(C#)</td><td>움직임 규칙. 키를 누르면 공에 힘을 주는 코드</td></tr>
+            <tr><td>빌드(WebGL)</td><td>Unity 게임을 웹페이지로 내보내기. 그래서 링크로 바로 해 볼 수 있어요</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+    <div class="gblock"><h4>공을 굴리는 스크립트 (PlayerController.cs 일부)</h4>
+      <div class="eg un-code">void FixedUpdate()   // 물리 계산 때마다 실행돼요
+{
+    // 방향키 값(-1 ~ 1)을 읽어서
+    Vector3 dir = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+    rb.AddForce(dir * force);   // 그 방향으로 공(Rigidbody)을 밀어요
+}
 
-      <div class="gblock"><h4>수업용으로 만들어 볼 만한 것</h4>
-        <table class="gtab"><thead><tr><th>아이디어</th><th>교과</th><th>어떤 앱?</th><th>쓰는 Unity 기능</th></tr></thead><tbody>
-          <tr><td>태양계 3D 탐험</td><td>과학</td><td>행성 사이를 날아다니며 크기와 거리를 비교해요</td><td>3D 카메라, 회전</td></tr>
-          <tr><td>물체 낙하·마찰 실험실</td><td>과학</td><td>무게와 경사를 바꾸면 굴러가는 모습이 달라져요</td><td>물리 엔진(Rigidbody)</td></tr>
-          <tr><td>우리 동네 3D 걷기</td><td>사회</td><td>학교 주변을 3D로 만들고 1인칭으로 걸어 다녀요</td><td>1인칭 조작, 지형</td></tr>
-          <tr><td>분수 피자 가게</td><td>수학</td><td>주문대로 피자 조각을 나눠 담는 2D 게임이에요</td><td>2D 그림(스프라이트), 클릭</td></tr>
-          <tr><td>영어 단어 미로 탈출</td><td>영어</td><td>문 앞에서 단어 퀴즈를 맞히면 문이 열려요</td><td>충돌(Collider), 화면 UI</td></tr>
-          <tr><td>문화유산 VR 답사</td><td>사회·미술</td><td>VR 기기로 유적 안을 둘러보며 설명을 들어요</td><td>VR 템플릿, 소리</td></tr>
-        </tbody></table>
-      </div>
+void OnTriggerEnter(Collider other)   // 별(트리거)에 닿으면
+{
+    other.gameObject.SetActive(false);   // 별을 끄고
+    Hud.I.Add();                         // 점수를 올려요
+}</div>
+      <p class="tnote">장면(바닥·벽·별·상자 탑)도 코드로 만들고 웹으로 내보내도록 해서, Unity 화면을 열지 않고 Claude Code가 처음부터 끝까지 만들었어요.</p>
+    </div>
+    <div class="gblock"><h4>Unity로 만든 유명한 게임·앱</h4>
+      <table class="gtab"><thead><tr><th>이름</th><th>종류</th><th>Unity로 이런 것도 돼요</th></tr></thead><tbody>
+        <tr><td>포켓몬 GO</td><td>위치 기반 AR 게임</td><td>카메라에 비친 진짜 길 위에 캐릭터를 띄워요 (AR)</td></tr>
+        <tr><td>어몽 어스</td><td>2D 온라인 추리 게임</td><td>여러 사람이 한 방에서 실시간으로 같이 놀아요 (멀티플레이)</td></tr>
+        <tr><td>원신</td><td>3D 오픈 월드 RPG</td><td>넓은 3D 세계를 PC·휴대폰·게임기로 함께 내보내요 (여러 기기)</td></tr>
+        <tr><td>할로우 나이트</td><td>2D 액션 게임</td><td>손그림 같은 2D 게임도 Unity로 만들어요 (2D)</td></tr>
+        <tr><td>모뉴먼트 밸리</td><td>3D 착시 퍼즐</td><td>작은 팀도 아름다운 3D 퍼즐을 만들어요 (소규모 제작)</td></tr>
+        <tr><td>비트 세이버</td><td>VR 리듬 게임</td><td>VR 기기를 쓰고 손을 휘둘러 놀아요 (VR)</td></tr>
+      </tbody></table>
+      <p class="tnote">모두 Unity 엔진으로 만든 것으로 널리 알려진 게임이에요.</p>
+    </div>
 
-      <div class="gblock"><h4>어떤 프로그램을 쓰면 좋을까?</h4>
-        <p class="tnote">2026년 11월 기준이에요. 요금 정책은 자주 바뀌니 쓰기 전에 공식 사이트에서 다시 확인하세요.</p>
-        <table class="gtab"><thead><tr><th>하고 싶은 것</th><th>추천</th><th>좋은 점</th><th>언어 · 난이도</th><th>비용</th></tr></thead><tbody>
-          <tr><td>3D·VR·AR 앱을 제대로</td><td>Unity</td><td>자료와 강좌가 가장 많아 AI 도움도 받기 쉬움, 웹·휴대폰·VR로 내보내기</td><td>C# · 중간</td><td>개인·소규모는 무료 (매출 기준 넘으면 유료)</td></tr>
-          <tr><td>가볍고 완전 무료인 2D 게임</td><td>Godot</td><td>설치가 작고 빠름, 오픈소스</td><td>GDScript · 중간</td><td>무료</td></tr>
-          <tr><td>영화 같은 고급 그래픽</td><td>Unreal Engine</td><td>가장 사실적인 그래픽, 대신 무겁고 어려움</td><td>블루프린트(블록)·C++ · 어려움</td><td>무료 (큰 매출부터 로열티)</td></tr>
-          <tr><td>코딩 없이 브라우저에서</td><td>GDevelop, Construct 3</td><td>설치 없이 '조건 → 행동' 블록으로 게임 만들기</td><td>블록 · 쉬움</td><td>무료 / 일부 유료</td></tr>
-          <tr><td>학생들이 함께 노는 3D 세계</td><td>Roblox Studio</td><td>만들자마자 친구와 같이 접속, 학생에게 친숙</td><td>Luau · 중간</td><td>무료</td></tr>
-          <tr><td>교실용 VR·AR 공간</td><td>CoSpaces Edu</td><td>블록 코딩, 학급 관리 기능</td><td>블록 · 쉬움</td><td>일부 무료, 대부분 유료</td></tr>
-          <tr><td>웹페이지 안에 3D 넣기</td><td>Three.js, Spline</td><td>링크 하나로 공유, 바이브 코딩과 잘 맞음</td><td>JavaScript / 노코드 · 중간~쉬움</td><td>무료 (Spline은 일부 유료)</td></tr>
-          <tr><td>3D 모델(캐릭터·물체) 만들기</td><td>Blender</td><td>엔진에 넣을 3D 재료를 직접 만들기</td><td>— · 중간~어려움</td><td>무료</td></tr>
-        </tbody></table>
-      </div>
+    <div class="gblock"><h4>수업용으로 만들어 볼 만한 것</h4>
+      <table class="gtab"><thead><tr><th>아이디어</th><th>교과</th><th>어떤 앱?</th><th>쓰는 Unity 기능</th></tr></thead><tbody>
+        <tr><td>태양계 3D 탐험</td><td>과학</td><td>행성 사이를 날아다니며 크기와 거리를 비교해요</td><td>3D 카메라, 회전</td></tr>
+        <tr><td>물체 낙하·마찰 실험실</td><td>과학</td><td>무게와 경사를 바꾸면 굴러가는 모습이 달라져요</td><td>물리 엔진(Rigidbody)</td></tr>
+        <tr><td>우리 동네 3D 걷기</td><td>사회</td><td>학교 주변을 3D로 만들고 1인칭으로 걸어 다녀요</td><td>1인칭 조작, 지형</td></tr>
+        <tr><td>분수 피자 가게</td><td>수학</td><td>주문대로 피자 조각을 나눠 담는 2D 게임이에요</td><td>2D 그림(스프라이트), 클릭</td></tr>
+        <tr><td>영어 단어 미로 탈출</td><td>영어</td><td>문 앞에서 단어 퀴즈를 맞히면 문이 열려요</td><td>충돌(Collider), 화면 UI</td></tr>
+        <tr><td>문화유산 VR 답사</td><td>사회·미술</td><td>VR 기기로 유적 안을 둘러보며 설명을 들어요</td><td>VR 템플릿, 소리</td></tr>
+      </tbody></table>
+    </div>
 
-      <div class="gblock"><h4>Unity 시작하기 (AI와 함께)</h4>
-        <ol class="mo-steps">
-          <li><b>Unity Hub</b>를 설치하고 <b>Unity 6</b> 에디터를 받아요. 개인용 라이선스는 무료예요.</li>
-          <li>새 프로젝트에서 템플릿(2D, 3D, VR)을 골라요.</li>
-          <li>코드 편집기로 <b>VS Code</b>를 연결해요. Unity 코드는 C# 파일(.cs)이에요.</li>
-          <li>AI에게 부탁해요. 예: "플레이어가 방향키로 움직이고 스페이스로 점프하는 C# 스크립트 만들어 줘". <b>Unity MCP</b>를 연결하면 Claude Code 같은 AI가 에디터 안의 물체까지 직접 만들어 줘요.</li>
-          <li><b>File → Build Profiles</b>에서 <b>Web</b>을 골라 빌드하면, 링크 하나로 학생들에게 나눠 줄 수 있어요.</li>
-        </ol>
-        <p class="mo-note">웹앱과 다른 점: Unity는 물체를 화면에 끌어다 놓고 스크립트를 붙이는 손 작업이 많아요. 그래서 코드만 쓰는 웹앱보다 AI 혼자 끝내기 어려워요. 처음에는 AI가 만든 스크립트를 물체에 붙이는 일부터 직접 해 보세요.</p>
-      </div>
-    </section>
+    <div class="gblock"><h4>어떤 프로그램을 쓰면 좋을까?</h4>
+      <p class="tnote">2026년 11월 기준이에요. 요금 정책은 자주 바뀌니 쓰기 전에 공식 사이트에서 다시 확인하세요.</p>
+      <table class="gtab"><thead><tr><th>하고 싶은 것</th><th>추천</th><th>좋은 점</th><th>언어 · 난이도</th><th>비용</th></tr></thead><tbody>
+        <tr><td>3D·VR·AR 앱을 제대로</td><td>Unity</td><td>자료와 강좌가 가장 많아 AI 도움도 받기 쉬움, 웹·휴대폰·VR로 내보내기</td><td>C# · 중간</td><td>개인·소규모는 무료 (매출 기준 넘으면 유료)</td></tr>
+        <tr><td>가볍고 완전 무료인 2D 게임</td><td>Godot</td><td>설치가 작고 빠름, 오픈소스</td><td>GDScript · 중간</td><td>무료</td></tr>
+        <tr><td>영화 같은 고급 그래픽</td><td>Unreal Engine</td><td>가장 사실적인 그래픽, 대신 무겁고 어려움</td><td>블루프린트(블록)·C++ · 어려움</td><td>무료 (큰 매출부터 로열티)</td></tr>
+        <tr><td>코딩 없이 브라우저에서</td><td>GDevelop, Construct 3</td><td>설치 없이 '조건 → 행동' 블록으로 게임 만들기</td><td>블록 · 쉬움</td><td>무료 / 일부 유료</td></tr>
+        <tr><td>학생들이 함께 노는 3D 세계</td><td>Roblox Studio</td><td>만들자마자 친구와 같이 접속, 학생에게 친숙</td><td>Luau · 중간</td><td>무료</td></tr>
+        <tr><td>교실용 VR·AR 공간</td><td>CoSpaces Edu</td><td>블록 코딩, 학급 관리 기능</td><td>블록 · 쉬움</td><td>일부 무료, 대부분 유료</td></tr>
+        <tr><td>웹페이지 안에 3D 넣기</td><td>Three.js, Spline</td><td>링크 하나로 공유, 바이브 코딩과 잘 맞음</td><td>JavaScript / 노코드 · 중간~쉬움</td><td>무료 (Spline은 일부 유료)</td></tr>
+        <tr><td>3D 모델(캐릭터·물체) 만들기</td><td>Blender</td><td>엔진에 넣을 3D 재료를 직접 만들기</td><td>— · 중간~어려움</td><td>무료</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="gblock"><h4>Unity 시작하기 (AI와 함께)</h4>
+      <ol class="mo-steps">
+        <li><b>Unity Hub</b>를 설치하고 <b>Unity 6</b> 에디터를 받아요. 개인용 라이선스는 무료예요.</li>
+        <li>새 프로젝트에서 템플릿(2D, 3D, VR)을 골라요.</li>
+        <li>코드 편집기로 <b>VS Code</b>를 연결해요. Unity 코드는 C# 파일(.cs)이에요.</li>
+        <li>AI에게 부탁해요. 예: "플레이어가 방향키로 움직이고 스페이스로 점프하는 C# 스크립트 만들어 줘". <b>Unity MCP</b>를 연결하면 Claude Code 같은 AI가 에디터 안의 물체까지 직접 만들어 줘요.</li>
+        <li><b>File → Build Profiles</b>에서 <b>Web</b>을 골라 빌드하면, 링크 하나로 학생들에게 나눠 줄 수 있어요.</li>
+      </ol>
+      <p class="mo-note">웹앱과 다른 점: Unity는 물체를 화면에 끌어다 놓고 스크립트를 붙이는 손 작업이 많아요. 그래서 코드만 쓰는 웹앱보다 AI 혼자 끝내기 어려워요. 처음에는 AI가 만든 스크립트를 물체에 붙이는 일부터 직접 해 보세요.</p>
+    </div>
   </section>
 
   <section class="glos pg-glos" aria-label="용어 사전" hidden>
@@ -1027,7 +1080,7 @@ document.querySelector(".tabbar").addEventListener("keydown", e => {
   const nx = ORDER[(cur + (e.key === "ArrowRight" ? 1 : ORDER.length - 1)) % ORDER.length];
   show(nx); document.getElementById("tab-" + nx).focus();
 });
-let curPage = ["spot", "glos", "plan", "api", "motion"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "lab";
+let curPage = ["spot", "glos", "plan", "api", "motion", "unity"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "lab";
 function setPage(pg) {
   curPage = pg;
   document.querySelectorAll(".pg-plan").forEach(el => el.hidden = pg !== "plan");
@@ -1036,6 +1089,7 @@ function setPage(pg) {
   document.querySelectorAll(".pg-glos").forEach(el => el.hidden = pg !== "glos");
   document.querySelectorAll(".pg-api").forEach(el => el.hidden = pg !== "api");
   document.querySelectorAll(".pg-motion").forEach(el => el.hidden = pg !== "motion");
+  document.querySelectorAll(".pg-unity").forEach(el => el.hidden = pg !== "unity");
   document.querySelectorAll(".pagebtn").forEach(b => b.dataset.page === pg ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const sel = document.querySelector('.tab[aria-selected="true"]');
   history.replaceState(null, "", "#" + (pg !== "lab" ? pg : (sel ? sel.dataset.k : "html")));
@@ -1973,7 +2027,7 @@ const MO = [
 const moRoot = document.querySelector(".motion");
 const moTop = document.getElementById("moTop");
 moTop.innerHTML = MO_SEC.map(([k, t]) => '<button class="mo-chip" data-go="mo-sec-' + k + '">' + t + "</button>").join("") +
-  '<button class="mo-chip" data-go="mo-unity">🎮 Unity·게임 엔진</button><button class="mo-chip mo-toggle" id="moReduce" aria-pressed="false">🛑 움직임 끄기</button>';
+  '<button class="mo-chip mo-toggle" id="moReduce" aria-pressed="false">🛑 움직임 끄기</button>';
 document.getElementById("moSecs").innerHTML = MO_SEC.map(([k, t, d]) => '<section class="mo-sec" id="mo-sec-' + k + '"><h3>' + t + "</h3><p>" + d + '</p><div class="mo-grid">' +
   MO.map((m, i) => m.s !== k ? "" : '<article class="mo-card"><div class="mo-stage" data-i="' + i + '"></div><div class="mo-body"><h4>' + esc(m.n) + "<small>" + esc(m.en) + "</small></h4><p>" + esc(m.d) +
     '</p><button class="mo-ask" title="눌러서 복사"><b>AI에게</b>"' + esc(m.ask) + '"</button></div></article>').join("") + "</div></section>").join("");
@@ -2005,6 +2059,13 @@ document.getElementById("moSecs").addEventListener("click", e => {
   (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => pToast("복사했어요. AI 채팅창에 붙여 넣으세요"), () => pToast("복사가 안 돼요. 직접 드래그해서 복사해 주세요"));
 });
 if (matchMedia("(prefers-reduced-motion: reduce)").matches) moReduce(true);
+
+// ── Unity 체험 ── 게임은 17MB쯤이라 시작을 눌렀을 때만 불러와요
+document.getElementById("unStart").onclick = e => {
+  const f = document.getElementById("unFrame");
+  f.src = "/unity-play/index.html"; f.hidden = false; e.currentTarget.remove();
+  f.addEventListener("load", () => f.focus(), { once: true });
+};
 </script>
 
 </body>
