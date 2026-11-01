@@ -123,7 +123,8 @@ textarea.code:focus-visible { box-shadow: inset 0 0 0 2px var(--js); }
 .say { background: var(--paper); border: 1px dashed var(--line); border-radius: 12px; padding: 16px 20px; display: grid; gap: 6px; }
 
 /* 페이지 전환 */
-.pagenav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; }
+.pagenav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; }
+@media (max-width: 1300px) { .pagenav { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 900px) { .pagenav { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .pagenav { grid-template-columns: 1fr; } }
 .pagebtn { appearance: none; cursor: pointer; text-align: left; border: 2px solid var(--line); background: var(--paper); color: var(--sub); border-radius: 14px; padding: 14px 18px; font: 800 20px/1.3 var(--font-display); display: flex; gap: 12px; align-items: center; }
@@ -243,7 +244,40 @@ textarea.pin { resize: vertical; }
 .answer th, .answer td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .answer th { font-weight: 700; }
 .answer .tw { overflow-x: auto; }
-.answer .eg { font: 15px/1.7 var(--font-code); background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: pre; font-variant-ligatures: none; }
+.answer .eg, .aq-fb .eg { font: 15px/1.7 var(--font-code); background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: pre; font-variant-ligatures: none; }
+
+/* API 이해하기 */
+.apiq { display: grid; gap: 18px; }
+.aq-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.aq-dots { display: flex; gap: 6px; flex-wrap: wrap; }
+.aq-dot { appearance: none; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--line); background: var(--paper); color: var(--sub); font: 800 15px var(--font-body); cursor: pointer; }
+.aq-dot.ok { background: var(--tw-soft); border-color: var(--tw); color: var(--tw); }
+.aq-dot.no { background: var(--html-soft); border-color: var(--html); color: var(--html); }
+.aq-dot[aria-current="step"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
+.aq-dot:focus-visible { outline: 2px solid var(--css); outline-offset: 2px; }
+.aq-score { font-weight: 800; font-size: 17px; }
+.aq-done { background: var(--tw-soft); border-radius: 14px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 18px; font-weight: 800; }
+.aq-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 960px) { .aq-grid { grid-template-columns: 1fr; } }
+.aq-try { color: var(--sub); font-size: 15px; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper); }
+.aq-try b { color: var(--ink); }
+.aq-ask { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 12px; }
+.aq-ask h3 { font-size: 20px; }
+.aq-choices { display: grid; gap: 8px; }
+.aq-choice { appearance: none; text-align: left; border: 2px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 12px; padding: 10px 14px; cursor: pointer; font: 700 17px/1.4 var(--font-body); display: grid; gap: 2px; }
+.aq-choice small { font-weight: 500; font-size: 14px; color: var(--sub); }
+.aq-choice:hover:not(:disabled) { border-color: var(--sub); }
+.aq-choice:disabled { cursor: default; }
+.aq-choice.right { border-color: var(--tw); background: var(--tw-soft); }
+.aq-choice.wrong { border-color: var(--html); background: var(--html-soft); }
+.aq-choice.dim { opacity: .5; }
+.aq-choice:focus-visible { outline: 2px solid var(--css); outline-offset: 2px; }
+.aq-fb { display: grid; gap: 10px; border-top: 1px dashed var(--line); padding-top: 12px; }
+.aq-verdict { font-weight: 800; font-size: 18px; }
+.aq-verdict.ok { color: var(--tw); } .aq-verdict.no { color: var(--html); }
+.aq-fb p { font-size: 16px; line-height: 1.7; }
+.aq-fb h4 { font-size: 15px; color: var(--sub); }
+.aq-nav { display: flex; justify-content: space-between; gap: 8px; }
 </style>
 
 </head>
@@ -264,6 +298,7 @@ textarea.pin { resize: vertical; }
     <button class="pagebtn" data-page="spot"><span class="pn">2</span><span>틀린 그림 찾기<small>JS 있고 없고 · 코드 / DB / API</small></span></button>
     <button class="pagebtn" data-page="glos"><span class="pn">3</span><span>용어 사전<small>부록 1~5 · 낱말 찾기</small></span></button>
     <button class="pagebtn" data-page="plan"><span class="pn">4</span><span>내 앱 구상하기<small>MVP · 화면 · PRD → AI 프롬프트</small></span></button>
+    <button class="pagebtn" data-page="api"><span class="pn">5</span><span>API 이해하기<small>작은 앱 10개 · 어떤 API를 썼을까?</small></span></button>
   </nav>
 
   <section class="plan pg-plan" aria-label="내 앱 구상하기" hidden>
@@ -404,6 +439,31 @@ fetch("https://screen-lab-ten.vercel.app/api/capitals")   // → 서버가 Supab
 fetch("https://screen-lab-ten.vercel.app/api/quiz")
 { "q": "47 + 38 = ?", "answer": "85", "made_at": "2026-10-21T…" }</div>
         <p>날씨·급식(NEIS)·OpenAI 같은 외부 서비스 API도 같은 방식이에요. 주소로 요청하면 JSON으로 답이 와요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="apiq pg-api" aria-label="API 이해하기" hidden>
+    <div>
+      <h2>API 이해하기</h2>
+      <p class="lead">API는 내 앱이 혼자 못 하는 일을 다른 서비스에 부탁하는 창구예요. 왼쪽 작은 앱을 직접 눌러 보고, 어떤 API를 썼을지 오른쪽에서 골라 보세요.</p>
+    </div>
+    <div class="aq-top">
+      <div class="aq-dots" id="aqDots" aria-label="문제 번호"></div>
+      <div class="aq-score" id="aqScore"></div>
+    </div>
+    <div class="aq-done" id="aqDone" hidden><span id="aqDoneText"></span><button class="pbtn" id="aqReset">처음부터 다시 풀기</button></div>
+    <div class="aq-grid">
+      <div class="pane">
+        <div class="pane-label"><span class="dot" id="aqNo">1</span><span id="aqTitle"></span></div>
+        <iframe id="aqFrame" title="작은 앱" sandbox="allow-scripts"></iframe>
+        <div class="aq-try"><b>해 볼 것</b> · <span id="aqTry"></span></div>
+      </div>
+      <div class="aq-ask">
+        <h3>이 앱은 어떤 API를 썼을까요?</h3>
+        <div class="aq-choices" id="aqChoices"></div>
+        <div class="aq-fb" id="aqFb" hidden></div>
+        <div class="aq-nav"><button class="pbtn" id="aqPrev">← 이전</button><button class="pbtn primary" id="aqNext">다음 문제 →</button></div>
       </div>
     </div>
   </section>
@@ -770,13 +830,14 @@ document.querySelector(".tabbar").addEventListener("keydown", e => {
   const nx = ORDER[(cur + (e.key === "ArrowRight" ? 1 : ORDER.length - 1)) % ORDER.length];
   show(nx); document.getElementById("tab-" + nx).focus();
 });
-let curPage = ["spot", "glos", "plan"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "lab";
+let curPage = ["spot", "glos", "plan", "api"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "lab";
 function setPage(pg) {
   curPage = pg;
   document.querySelectorAll(".pg-plan").forEach(el => el.hidden = pg !== "plan");
   document.querySelectorAll(".pg-lab").forEach(el => el.hidden = pg !== "lab");
   document.querySelectorAll(".pg-spot").forEach(el => el.hidden = pg !== "spot");
   document.querySelectorAll(".pg-glos").forEach(el => el.hidden = pg !== "glos");
+  document.querySelectorAll(".pg-api").forEach(el => el.hidden = pg !== "api");
   document.querySelectorAll(".pagebtn").forEach(b => b.dataset.page === pg ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
   const sel = document.querySelector('.tab[aria-selected="true"]');
   history.replaceState(null, "", "#" + (pg !== "lab" ? pg : (sel ? sel.dataset.k : "html")));
@@ -1129,6 +1190,333 @@ document.querySelectorAll(".reveal-btn").forEach(b => b.addEventListener("click"
   const box = document.getElementById(b.dataset.target);
   box.hidden = !box.hidden; b.textContent = box.hidden ? "정답 보기" : "정답 접기";
 }));
+
+// ── API 이해하기 ──
+const API_OPT = {
+  neis: ["NEIS 교육정보 개방 포털", "학교 급식·시간표·학사 일정"],
+  weather: ["날씨 API (기상청)", "기온·비 올 확률·바람"],
+  map: ["카카오맵 API", "지도·장소 핀·길 찾기"],
+  ai: ["AI API (OpenAI·Gemini·Claude)", "글을 읽고 새 글을 지어 냄"],
+  trans: ["번역 API", "한 언어를 다른 언어로"],
+  tts: ["음성 합성(TTS) API", "글자 → 소리"],
+  stt: ["음성 인식(STT) API", "소리 → 글자"],
+  google: ["구글 로그인", "구글 계정으로 누구인지 확인"],
+  supa: ["Supabase", "데이터베이스 · 실시간 알림"],
+  qr: ["QR 코드 API", "주소 → QR 그림"],
+  img: ["이미지 생성 API", "글 → AI가 그린 그림"],
+  none: ["API 없음", "바깥에 부탁할 일이 없음"]
+};
+const MINI_CSS = `<style>
+  body { font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; margin: 0; background: #eef3fb; min-height: 100vh; display: grid; place-items: center; color: #1f2430; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,.08); padding: 22px; width: 300px; }
+  h1 { font-size: 20px; margin: 0 0 12px; color: #2a6fdb; }
+  button { width: 100%; padding: 11px; font-size: 15px; border: 0; border-radius: 10px; background: #2a6fdb; color: #fff; cursor: pointer; margin-top: 8px; font-family: inherit; }
+  button:disabled { opacity: .6; }
+  .light { background: #e5eefc; color: #2a6fdb; }
+  input, textarea, select { width: 100%; box-sizing: border-box; padding: 9px; font-size: 15px; border: 2px solid #cfd8e8; border-radius: 10px; font-family: inherit; }
+  .sub { color: #5c6474; font-size: 13px; }
+</style>`;
+const mini = (body, js, css) => '<!doctype html><html lang="ko"><head><meta charset="utf-8">' + MINI_CSS + (css ? "<style>" + css + "</style>" : "") +
+  "</head><body>" + body + (js ? SC + ">var $ = function (x) { return document.getElementById(x); };\n" + js + ESC : "") + "</body></html>";
+
+const AQ = [
+{ t: "오늘의 급식", ans: "neis", opts: ["weather", "neis", "map", "ai"],
+  try: "◀ ▶ 를 눌러 다른 날 메뉴를 보세요. 메뉴 옆 숫자도 보세요.",
+  app: mini(`<div class="card"><h1>🍚 오늘의 급식</h1>
+<div class="row"><button class="sm" id="prev">◀</button><b id="day"></b><button class="sm" id="next">▶</button></div>
+<p class="sub">푸른초등학교 · 중식</p><ul id="menu"></ul><p class="sub" id="kcal"></p><p class="sub">메뉴 옆 숫자는 알레르기 정보예요.</p></div>`,
+  `var D = [["11월 2일 (월)", ["기장밥", "쇠고기미역국 (5.6.16)", "닭갈비 (5.6.13.15)", "배추김치 (9)", "요구르트 (2)"], "612.4"],
+  ["11월 3일 (화)", ["현미밥", "된장찌개 (5.6)", "고등어구이 (7)", "깍두기 (9)", "사과"], "578.9"],
+  ["11월 4일 (수)", ["카레라이스 (2.5.6.10.13)", "유부장국 (5.6)", "치킨너겟 (1.2.5.6.15)", "배추김치 (9)", "귤"], "655.1"]], i = 0;
+function load() {
+  $("day").textContent = D[i][0]; $("menu").innerHTML = '<li class="sub">불러오는 중…</li>'; $("kcal").textContent = "";
+  var k = i; setTimeout(function () { if (k !== i) return;
+    $("menu").innerHTML = D[i][1].map(function (m) { return "<li>" + m + "</li>"; }).join(""); $("kcal").textContent = "열량 " + D[i][2] + " Kcal"; }, 600);
+}
+$("prev").onclick = function () { i = (i + 2) % 3; load(); };
+$("next").onclick = function () { i = (i + 1) % 3; load(); };
+load();`,
+  `.row { display: flex; align-items: center; justify-content: space-between; gap: 8px; } .sm { width: auto; margin: 0; padding: 6px 12px; background: #e5eefc; color: #2a6fdb; }
+ul { padding-left: 20px; line-height: 1.9; min-height: 150px; margin: 6px 0; }`),
+  why: "학교 이름과 날짜에 맞춰 메뉴를 받아 왔고, 메뉴 옆에 알레르기 번호(5.6.16)가 붙어 있어요. 나이스(NEIS) 급식 데이터가 바로 이렇게 생겼어요. 같은 곳에서 시간표와 학사 일정도 받아 올 수 있어요.",
+  code: `// 교육청 코드·학교 코드·날짜를 넣어 부르면 그날 급식이 JSON으로 와요
+fetch("https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=내키&Type=json
+  &ATPT_OFCDC_SC_CODE=교육청코드&SD_SCHUL_CODE=학교코드&MLSV_YMD=20261102")
+// → { "DDISH_NM": "기장밥<br/>쇠고기미역국 (5.6.16)…", "CAL_INFO": "612.4 Kcal" }` },
+
+{ t: "오늘 체육 어디서?", ans: "weather", opts: ["neis", "trans", "weather", "google"],
+  try: "'다시 받아 오기'를 여러 번 눌러 보세요. 날씨가 다른 날을 흉내 내요.",
+  app: mini(`<div class="card"><h1>🏃 오늘 체육 어디서?</h1><div class="big" id="ic"></div><div class="temp" id="t"></div>
+<p class="sub c" id="info"></p><div class="go" id="go"></div><button id="re">다시 받아 오기</button><p class="sub c" id="base"></p></div>`,
+  `var W = [["☀️", 14, 10, 2, "운동장 체육 OK!", "#e3f6e8", "#1d7a3a"], ["🌧️", 9, 80, 4, "오늘은 강당에서!", "#fdebe3", "#c2410c"], ["⛅", 11, 30, 7, "바람이 세요. 운동장 OK, 겉옷 챙기기", "#fbf3d6", "#8a6500"]], i = 0;
+function load() {
+  $("ic").textContent = "⏳"; $("t").textContent = ""; $("info").textContent = "날씨를 받아 오는 중…"; $("go").textContent = ""; $("go").style.background = "none"; $("base").textContent = "";
+  setTimeout(function () { var w = W[i]; i = (i + 1) % W.length;
+    $("ic").textContent = w[0]; $("t").textContent = w[1] + "°C"; $("info").textContent = "비 올 확률 " + w[2] + "% · 바람 " + w[3] + "m/s";
+    $("go").textContent = w[4]; $("go").style.background = w[5]; $("go").style.color = w[6]; $("base").textContent = "오늘 8시 발표 예보 기준"; }, 700);
+}
+$("re").onclick = load; load();`,
+  `.big { font-size: 56px; text-align: center; min-height: 68px; } .temp { font-size: 32px; font-weight: 800; text-align: center; } .c { text-align: center; }
+.go { padding: 12px; border-radius: 10px; font-weight: 800; text-align: center; min-height: 20px; }`),
+  why: "기온·비 올 확률·바람처럼 숫자로 된 날씨 정보와 '8시 발표'라는 말이 단서예요. 기상청 예보는 하루에 여러 번 발표되고, 공공데이터포털에서 키를 받으면 무료로 쓸 수 있어요. 날씨는 API가 주고, '운동장이냐 강당이냐'는 내 코드가 정해요.",
+  code: `fetch("https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst
+  ?serviceKey=내키&base_date=20261102&base_time=0800&nx=60&ny=127&dataType=JSON")
+// → 항목마다 숫자가 와요. TMP = 기온, POP = 비 올 확률(%), WSD = 바람(m/s)
+
+if (pop >= 60) message = "오늘은 강당에서!";   // 이 판단은 내 코드가 해요` },
+
+{ t: "체험학습 장소 지도", ans: "map", opts: ["qr", "weather", "supa", "map"],
+  try: "핀을 누르고 + − 로 확대해 보세요. 지도 왼쪽 아래 구석도 보세요.",
+  app: mini(`<div class="card"><h1>🗺️ 체험학습 장소</h1><div class="map"><div class="inner" id="inner">
+<i class="park" style="left:58%;top:6%;width:34%;height:36%"></i><i class="park" style="left:28%;top:72%;width:30%;height:26%"></i>
+<i class="road" style="left:0;right:0;top:46%;height:9px"></i><i class="road" style="top:0;bottom:0;left:52%;width:9px"></i><i class="road" style="top:0;height:46%;left:22%;width:7px"></i>
+<i class="river"></i></div><div class="zoom"><button id="zi">+</button><button id="zo">−</button></div><span class="logo">kakao</span></div>
+<p class="sub" id="info">핀을 눌러 보세요.</p></div>`,
+  `var P = [["🏫", 22, 34, "우리 학교", "여기서 출발해요"], ["📍", 74, 26, "어린이 과학관", "학교에서 4.2km · 버스 25분"], ["📍", 42, 88, "시립 식물원", "학교에서 6.8km · 버스 35분"]], z = 1;
+P.forEach(function (p) {
+  var b = document.createElement("button"); b.className = "pin"; b.textContent = p[0]; b.style.left = p[1] + "%"; b.style.top = p[2] + "%";
+  b.onclick = function () { $("info").innerHTML = "<b>" + p[3] + "</b> · " + p[4]; };
+  var l = document.createElement("span"); l.className = "lbl"; l.textContent = p[3]; l.style.left = p[1] + "%"; l.style.top = p[2] + "%";
+  $("inner").appendChild(b); $("inner").appendChild(l);
+});
+function zoom(d) { z = Math.min(2, Math.max(1, z + d)); $("inner").style.transform = "scale(" + z + ")"; }
+$("zi").onclick = function () { zoom(.25); }; $("zo").onclick = function () { zoom(-.25); };`,
+  `.map { position: relative; height: 240px; border-radius: 12px; overflow: hidden; background: #eef0e6; border: 1px solid #d9dccf; }
+.inner { position: absolute; inset: 0; transition: transform .3s; } .inner i { position: absolute; display: block; }
+.road { background: #fff; box-shadow: 0 0 0 1px #e2e2d8; } .park { background: #cfe8c4; border-radius: 14px; }
+.river { left: -20%; right: -20%; top: 60%; height: 22px; background: #bcd7f0; transform: rotate(-8deg); }
+.pin { position: absolute; transform: translate(-50%, -100%); font-size: 26px; background: none; border: 0; padding: 0; margin: 0; width: auto; z-index: 2; }
+.lbl { position: absolute; transform: translate(-50%, 2px); font-size: 11px; font-weight: 700; background: #fff; padding: 1px 5px; border-radius: 6px; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,.15); z-index: 2; }
+.zoom { position: absolute; right: 8px; top: 8px; display: grid; gap: 4px; z-index: 3; }
+.zoom button { width: 30px; height: 30px; padding: 0; margin: 0; background: #fff; color: #333; border: 1px solid #ccc; border-radius: 6px; font-size: 18px; }
+.logo { position: absolute; left: 8px; bottom: 6px; font: 800 12px sans-serif; color: #3c1e1e; opacity: .7; z-index: 3; }`),
+  why: "확대할 수 있는 지도, 장소마다 꽂힌 핀, 구석의 kakao 표시가 단서예요. 지도는 직접 그리기가 거의 불가능해서 카카오맵·네이버 지도·구글 지도 API를 가져다 써요. (이 연습 화면의 지도는 흉내 낸 그림이에요.)",
+  code: `<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=내키"><\/script>
+
+const map = new kakao.maps.Map(mapBox, {
+  center: new kakao.maps.LatLng(37.43, 127.01), level: 5 });
+new kakao.maps.Marker({ map, position: new kakao.maps.LatLng(37.43, 127.00) });   // 핀 하나` },
+
+{ t: "글쓰기 도우미", ans: "ai", opts: ["ai", "trans", "neis", "tts"],
+  try: "피드백 받기를 누르고, 글을 고쳐서 다시 받아 보세요. 한 글자씩 써지는 것도 보세요.",
+  app: mini(`<div class="card"><h1>✏️ 글쓰기 도우미</h1><textarea id="tx" rows="4">오늘 체육 시간에 피구를 했다. 재미있었다.</textarea>
+<button id="go">피드백 받기</button><div class="bot" id="out" hidden><b>🤖 AI 도우미</b><p id="fb"></p></div></div>`,
+  `var S = ["'재미있었다'만으로는 어떤 순간이 재미있었는지 알기 어려워요. 공을 아슬아슬하게 피한 장면을 한 문장 더 써 볼까요?",
+  "피구를 했다는 게 잘 드러나요! 그때 내 마음이 어땠는지, 친구가 한 말이 있었는지 하나만 더 보태 볼까요?"],
+  L = ["장면이 눈에 그려져요. 특히 움직임을 쓴 부분이 생생해요. 마지막에 느낀 점을 한 문장으로 마무리해 볼까요?",
+  "길게 잘 썼어요! '그리고'로 이어진 문장을 두 문장으로 나누면 더 읽기 쉬워져요."], k = 0;
+$("go").onclick = function () {
+  var v = $("tx").value.trim(); if (!v) return;
+  var s = (v.length < 60 ? S : L)[k++ % 2], j = 0;
+  $("out").hidden = false; $("fb").textContent = ""; $("go").disabled = true; $("go").textContent = "생각하는 중…";
+  setTimeout(function step() {
+    $("go").textContent = "쓰는 중…"; $("fb").textContent = s.slice(0, ++j);
+    if (j < s.length) setTimeout(step, 28); else { $("go").disabled = false; $("go").textContent = "다시 받기"; }
+  }, 800);
+};`,
+  `textarea { resize: none; } .bot { margin-top: 12px; background: #f3f0ff; border-radius: 12px; padding: 10px 12px; }
+.bot b { font-size: 13px; color: #6b46c1; } .bot p { margin: 4px 0 0; line-height: 1.6; font-size: 14px; min-height: 3em; }`),
+  why: "내가 쓴 글을 읽고, 그 글에 맞는 문장을 새로 지어 한 글자씩 보여 줘요. 같은 글이어도 누를 때마다 말이 조금씩 달라요. 이렇게 읽고 새 글을 짓는 일은 AI API가 해요. (이 연습 화면은 미리 써 둔 문장으로 흉내만 냈어요.)",
+  code: `// 화면 → 내 서버 (AI 키는 서버에만 숨겨 둬요)
+fetch("/api/feedback", { method: "POST", body: JSON.stringify({ text: studentText }) });
+
+// 내 서버 → AI(OpenAI·Gemini·Claude)에 학생 글과 지시를 함께 보내요
+system: "초등학생 글에 칭찬 하나, 고칠 점 하나를 다정한 말투로 답해"` },
+
+{ t: "영어 문장 뜻 보기", ans: "trans", opts: ["tts", "ai", "trans", "neis"],
+  try: "문장을 고르고 '한국어로 바꾸기'를 눌러 보세요.",
+  app: mini(`<div class="card"><h1>🌐 영어 문장 뜻 보기</h1><select id="sel"><option>Where is the library?</option>
+<option>I like playing soccer with my friends.</option><option>Can I borrow your pencil?</option></select>
+<button id="go">한국어로 바꾸기</button><div class="out" id="out"></div></div>`,
+  `var K = { "Where is the library?": "도서관은 어디에 있나요?", "I like playing soccer with my friends.": "나는 친구들과 축구하는 것을 좋아해요.", "Can I borrow your pencil?": "연필 좀 빌려도 될까요?" };
+$("go").onclick = function () { var v = $("sel").value; $("out").textContent = "바꾸는 중…"; setTimeout(function () { $("out").textContent = K[v]; }, 500); };
+$("sel").onchange = function () { $("out").textContent = ""; };`,
+  `.out { margin-top: 12px; min-height: 26px; padding: 12px; border-radius: 10px; background: #f1f5fb; font-size: 17px; font-weight: 700; }`),
+  why: "영어 문장을 한국어로 바꿨어요. 번역만 하는 일이라 번역 API(파파고·DeepL·구글 번역)가 딱 맞아요. AI API로도 번역은 돼서 헷갈리라고 보기에 넣었어요. 번역만 할 땐 번역 API가 더 빠르고 싸고, '초등학생 말투로 바꿔 줘'처럼 다른 일까지 시킬 땐 AI API를 골라요.",
+  code: `fetch("https://api-free.deepl.com/v2/translate", {
+  method: "POST",
+  headers: { Authorization: "DeepL-Auth-Key 내키" },   // 키가 보이면 안 되니 실제로는 서버에서 불러요
+  body: new URLSearchParams({ text: "Where is the library?", target_lang: "KO" })
+});
+// → { "translations": [{ "text": "도서관은 어디에 있나요?" }] }` },
+
+{ t: "받아쓰기", ans: "tts", opts: ["stt", "trans", "tts", "weather"],
+  try: "소리를 켜고 '문장 듣기'를 눌러 보세요. 들은 대로 쓰고 채점해 보세요.",
+  app: mini(`<div class="card"><h1>🎧 받아쓰기 1번</h1><button id="play">🔊 문장 듣기</button><button id="slow" class="light">🐢 느리게 다시 듣기</button>
+<input id="ans" placeholder="들은 문장을 쓰세요" style="margin-top:14px"><button id="chk">채점하기</button><p class="res" id="res"></p><p class="sub" id="note"></p></div>`,
+  `var S = "가을 하늘이 높고 맑아요.";
+function say(r) {
+  if (!("speechSynthesis" in window)) { $("note").textContent = "이 브라우저는 소리 내기를 지원하지 않아요."; return; }
+  speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(S); u.lang = "ko-KR"; u.rate = r; speechSynthesis.speak(u);
+  $("note").textContent = "소리가 안 들리면 컴퓨터 소리를 켜 보세요.";
+}
+$("play").onclick = function () { say(1); }; $("slow").onclick = function () { say(.6); };
+function norm(s) { return s.replace(/[\\s.,!?]/g, ""); }
+$("chk").onclick = function () {
+  var ok = norm($("ans").value) === norm(S);
+  $("res").textContent = ok ? "정답이에요! 🎉" : "아쉬워요. 정답: " + S; $("res").style.color = ok ? "green" : "crimson";
+};`,
+  `.res { font-weight: 800; min-height: 1.4em; }`),
+  why: "글자를 소리로 바꿔 읽어 줬어요. 이걸 음성 합성(TTS)이라고 해요. 반대로 내 말을 듣고 글자로 받아 적는 건 음성 인식(STT)이에요. 이 화면은 브라우저에 처음부터 들어 있는 음성 API를 써서 키도 돈도 안 들어요. 더 자연스러운 목소리가 필요하면 OpenAI·구글 같은 바깥 음성 API를 써요.",
+  code: `const say = new SpeechSynthesisUtterance("가을 하늘이 높고 맑아요.");
+say.lang = "ko-KR";
+say.rate = 0.6;              // 느리게 다시 듣기
+speechSynthesis.speak(say);  // 브라우저 안에 있는 API라 키가 필요 없어요` },
+
+{ t: "우리 반 알림장", ans: "google", opts: ["supa", "google", "map", "ai"],
+  try: "로그인 버튼을 누르고 계정을 골라 보세요. 비밀번호를 어디에도 안 썼죠?",
+  app: mini(`<div class="card" id="c"></div><div class="ov" id="ov" hidden><div class="pick"><p class="pt">계정 선택</p><p class="sub">'우리 반 알림장'(으)로 이동</p>
+<button class="acc" data-n="김하늘"><span class="av">김</span><span><b>김하늘</b><br><small>teacher.kim@example.com</small></span></button>
+<button class="acc" data-n="이바다"><span class="av" style="background:#7c3aed">이</span><span><b>이바다</b><br><small>teacher.lee@example.com</small></span></button>
+<p class="sub tiny">계속하면 이름, 이메일 주소, 프로필 사진을 이 앱과 공유해요.</p></div></div>`,
+  `function out() {
+  $("c").innerHTML = '<h1>📒 우리 반 알림장</h1><p class="sub">알림장은 선생님만 쓸 수 있어요.</p><button class="gbtn" id="g"><span class="G">G</span> Google 계정으로 로그인</button>';
+  $("g").onclick = function () { $("ov").hidden = false; };
+}
+document.querySelectorAll(".acc").forEach(function (b) { b.onclick = function () {
+  $("ov").hidden = true;
+  $("c").innerHTML = '<h1>📒 우리 반 알림장</h1><p><b>' + b.dataset.n + ' 선생님</b>, 반가워요!</p><textarea rows="3">1. 내일 체육복 입고 오기</textarea><button>알림장 올리기</button><button class="light" id="lo">로그아웃</button>';
+  $("lo").onclick = out;
+}; });
+out();`,
+  `.gbtn { background: #fff; color: #3c4043; border: 1px solid #dadce0; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; }
+.G { font: 800 18px sans-serif; color: #4285f4; } textarea { resize: none; }
+.ov { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: grid; place-items: center; } .ov[hidden] { display: none; }
+.pick { background: #fff; border-radius: 12px; padding: 18px; width: 270px; } .pt { font-weight: 800; font-size: 18px; margin: 0; }
+.acc { display: flex; gap: 10px; align-items: center; background: #fff; color: #1f2430; border-top: 1px solid #eee; border-radius: 0; text-align: left; padding: 10px 4px; margin: 0; }
+.acc:hover { background: #f6f8fb; } .acc small { color: #5c6474; }
+.av { width: 32px; height: 32px; border-radius: 50%; background: #2a6fdb; color: #fff; display: grid; place-items: center; font-weight: 800; flex: none; } .tiny { font-size: 11px; margin: 10px 0 0; }`),
+  why: "로그인 버튼을 누르니 구글 창이 떠서 계정만 골랐어요. 비밀번호는 이 앱이 아니라 구글이 확인해요. 앱은 구글이 '이 사람 맞아요' 하고 넘겨준 이름과 이메일만 받아요. 그래서 앱이 비밀번호를 보관할 필요가 없어요. (이 연습 화면의 계정 창은 흉내 낸 거예요.)",
+  code: `<script src="https://accounts.google.com/gsi/client"><\/script>
+
+google.accounts.id.initialize({
+  client_id: "구글에 등록한 내 앱 ID",
+  callback: res => { /* 구글이 확인해 준 이름·이메일이 들어 있어요 */ }
+});` },
+
+{ t: "반 투표", ans: "supa", opts: ["google", "neis", "supa", "qr"],
+  try: "아무 태블릿에서나 투표해 보세요. 가만히 있어도 다른 친구들 표가 들어와요.",
+  app: mini(`<div><div class="two"><div class="ph"><p class="who">📱 내 태블릿</p><div class="vote" data-d="내 태블릿"></div></div>
+<div class="ph"><p class="who">📱 짝꿍 태블릿</p><div class="vote" data-d="짝꿍 태블릿"></div></div></div><p class="sub c" id="log">친구들이 표를 넣고 있어요…</p></div>`,
+  `var O = ["과학관", "동물원", "놀이공원"], V = [3, 2, 4], N = ["민준", "서연", "지호", "하은", "도윤", "수아"];
+document.querySelectorAll(".vote").forEach(function (box) {
+  box.innerHTML = '<p class="q">체험학습 어디로 갈까?</p>' + O.map(function (o, i) {
+    return '<button class="opt" data-i="' + i + '"><i class="bar"></i><span>' + o + '</span><b class="n"></b></button>'; }).join("") + '<p class="who tot"></p>';
+  box.addEventListener("click", function (e) { var b = e.target.closest(".opt"); if (b) vote(+b.dataset.i, box.dataset.d + "에서 '" + O[b.dataset.i] + "' 투표 → 두 화면이 같이 바뀌었어요"); });
+});
+function draw() {
+  var tot = V.reduce(function (a, b) { return a + b; }, 0);
+  document.querySelectorAll(".vote").forEach(function (box) {
+    box.querySelectorAll(".opt").forEach(function (b, i) { b.querySelector(".bar").style.width = Math.round(V[i] / tot * 100) + "%"; b.querySelector(".n").textContent = V[i] + "표"; });
+    box.querySelector(".tot").textContent = "전체 " + tot + "표";
+  });
+}
+function vote(i, msg) { V[i]++; draw(); $("log").textContent = msg; }
+var t = setInterval(function () {
+  if (V[0] + V[1] + V[2] >= 30) { clearInterval(t); $("log").textContent = "모두 투표했어요!"; return; }
+  var i = Math.floor(Math.random() * 3); vote(i, N[Math.floor(Math.random() * N.length)] + "(이)가 다른 자리에서 '" + O[i] + "'에 투표했어요");
+}, 2500);
+draw();`,
+  `.two { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; } .c { text-align: center; }
+.ph { background: #fff; border-radius: 18px; border: 6px solid #1f2430; padding: 12px; width: 200px; }
+.who { font-size: 12px; color: #5c6474; margin: 0 0 6px; } .q { font-weight: 800; margin: 0 0 4px; font-size: 15px; }
+.opt { display: block; background: #f1f5fb; color: #1f2430; text-align: left; margin: 6px 0 0; padding: 8px 10px; border-radius: 8px; position: relative; overflow: hidden; font-size: 14px; }
+.bar { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #cfe0fb; transition: width .5s; }
+.opt span, .n { position: relative; } .n { float: right; } .tot { margin: 8px 0 0; }`),
+  why: "내 태블릿에서 누른 표가 짝꿍 태블릿에도 새로고침 없이 바로 나타났어요. 표를 한곳(데이터베이스)에 모아 두고, 새 표가 들어오면 연결된 모든 기기에 바로 알려 줘야 이렇게 돼요. Supabase는 데이터베이스와 이 '실시간 알림'을 함께 줘요. (이 연습 화면은 한 화면 안에서 흉내만 냈어요.)",
+  code: `await supabase.from("votes").insert({ choice: "과학관" });   // 표를 DB에 저장
+
+supabase.channel("votes")
+  .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes" },
+      () => redraw())   // 누가 표를 넣으면 모든 기기가 막대를 다시 그려요
+  .subscribe();` },
+
+{ t: "링크 QR 만들기", ans: "qr", opts: ["img", "map", "supa", "qr"],
+  try: "주소를 바꿔 가며 QR을 만들고, 휴대폰 카메라로 찍어 보세요.",
+  app: mini(`<div class="card"><h1>🔳 링크 QR 만들기</h1><input id="u" value="https://screen-lab-ten.vercel.app"><button id="go">QR 만들기</button>
+<div class="qr" id="box"><span class="sub">주소를 넣고 버튼을 누르세요.</span></div></div>`,
+  `$("go").onclick = function () {
+  var v = $("u").value.trim(); if (!v) return;
+  $("box").innerHTML = '<span class="sub">QR 그림을 받아 오는 중…</span>';
+  var im = new Image(); im.alt = "QR 코드";
+  im.onload = function () { $("box").innerHTML = ""; $("box").appendChild(im); };
+  im.onerror = function () { $("box").innerHTML = '<span class="sub">인터넷이 안 돼서 받아 오지 못했어요.</span>'; };
+  im.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(v);
+};`,
+  `.qr { margin-top: 12px; height: 200px; display: grid; place-items: center; background: #f6f7f9; border-radius: 12px; } .qr img { width: 180px; height: 180px; }`),
+  why: "주소를 보내니 QR 그림이 돌아왔어요. 이 화면은 진짜로 무료 QR 코드 API(goqr.me)에 주소를 보내 그림을 받아 와요. 휴대폰으로 찍으면 열려요. 이미지 생성 API는 AI가 글을 보고 새 그림을 그리는 것이라 달라요. QR은 정해진 규칙대로 찍어 내는 그림이에요.",
+  code: `<!-- API를 꼭 fetch로만 부르는 건 아니에요. 그림 주소로 불러도 돼요 -->
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://screen-lab-ten.vercel.app">` },
+
+{ t: "모둠 활동 타이머", ans: "none", opts: ["weather", "ai", "none", "supa"],
+  try: "시작을 눌러 보세요. 1분씩 늘리고 줄여도 보세요.",
+  app: mini(`<div class="card"><h1>⏱️ 모둠 활동 타이머</h1><div class="clock" id="cl">03:00</div>
+<div class="row"><button id="m" class="light">−1분</button><button id="p" class="light">+1분</button></div><button id="st">시작</button><button id="rs" class="light">처음으로</button></div>`,
+  `var left = 180, t = null;
+function show() { $("cl").classList.remove("done"); $("cl").textContent = String(Math.floor(left / 60)).padStart(2, "0") + ":" + String(left % 60).padStart(2, "0"); }
+function stop(label) { clearInterval(t); t = null; $("st").textContent = label; }
+$("st").onclick = function () {
+  if (t) return stop("계속");
+  if (left <= 0) return;
+  $("st").textContent = "멈춤";
+  t = setInterval(function () { left--; show(); if (left <= 0) { stop("시작"); $("cl").textContent = "끝!"; $("cl").classList.add("done"); } }, 1000);
+};
+$("p").onclick = function () { left = Math.min(3600, left + 60); show(); };
+$("m").onclick = function () { left = Math.max(0, left - 60); show(); };
+$("rs").onclick = function () { stop("시작"); left = 180; show(); };`,
+  `.clock { font: 800 64px/1 ui-monospace, monospace; text-align: center; margin: 10px 0 14px; font-variant-numeric: tabular-nums; }
+.row { display: flex; gap: 8px; } .row button { margin-top: 0; } .done { animation: b .5s 4; color: #c2410c; } @keyframes b { 50% { opacity: .2; } }`),
+  why: "인터넷을 꺼도 잘 돌아가요. 1초마다 숫자를 하나씩 빼는 일은 브라우저 안의 JavaScript만으로 충분하거든요. 바깥에서 받아 올 정보도, 남에게 부탁할 일도 없으면 API는 필요 없어요. 앱을 구상할 때도 '이 기능에 API가 꼭 필요한가?'부터 따져 보세요. API를 덜 쓸수록 키·비용·오류 걱정이 줄어요.",
+  code: `let left = 180;                 // 3분 = 180초
+setInterval(() => {
+  left--;                         // 1초마다 1씩 빼기
+  clock.textContent = toMMSS(left);
+}, 1000);                         // 바깥에 물어볼 게 없어요` }
+];
+
+let aqI = 0, aqPick = {};
+try { aqPick = JSON.parse(sessionStorage.getItem("api-quiz") || "{}"); } catch (e) {}
+const aqFrame = document.getElementById("aqFrame");
+function aqShow(i) {
+  aqI = i; const q = AQ[i];
+  if (q.src) { aqFrame.removeAttribute("srcdoc"); aqFrame.src = q.src; } else aqFrame.srcdoc = q.app;
+  document.getElementById("aqNo").textContent = i + 1;
+  document.getElementById("aqTitle").textContent = q.t;
+  document.getElementById("aqTry").textContent = q.try;
+  aqSide();
+}
+function aqSide() {
+  const q = AQ[aqI], pick = aqPick[aqI];
+  document.getElementById("aqChoices").innerHTML = q.opts.map(k => {
+    const cls = !pick ? "" : k === q.ans ? " right" : k === pick ? " wrong" : " dim";
+    return '<button class="aq-choice' + cls + '" data-k="' + k + '"' + (pick ? " disabled" : "") + "><span>" + esc(API_OPT[k][0]) + "</span><small>" + esc(API_OPT[k][1]) + "</small></button>";
+  }).join("");
+  const fb = document.getElementById("aqFb");
+  fb.hidden = !pick;
+  if (pick) fb.innerHTML = (pick === q.ans ? '<p class="aq-verdict ok">맞았어요! 🎉</p>' : '<p class="aq-verdict no">아쉬워요. 정답은 ' + esc(API_OPT[q.ans][0]) + "예요.</p>") +
+    "<p>" + esc(q.why) + "</p><h4>실제 코드는 이렇게 생겼어요</h4><div class=\"eg\">" + esc(q.code) + "</div>";
+  document.getElementById("aqDots").innerHTML = AQ.map((x, j) => {
+    const p = aqPick[j], cls = !p ? "" : p === x.ans ? " ok" : " no";
+    return '<button class="aq-dot' + cls + '" data-i="' + j + '"' + (j === aqI ? ' aria-current="step"' : "") + ' aria-label="' + (j + 1) + "번 " + esc(x.t) + '">' + (j + 1) + "</button>";
+  }).join("");
+  const done = Object.keys(aqPick).length, right = AQ.filter((x, j) => aqPick[j] === x.ans).length;
+  document.getElementById("aqScore").textContent = "푼 문제 " + done + " / " + AQ.length + " · 맞힌 문제 " + right;
+  document.getElementById("aqDone").hidden = done < AQ.length;
+  document.getElementById("aqDoneText").textContent = AQ.length + "문제를 모두 풀었어요! " + right + "개 맞혔어요.";
+  document.getElementById("aqPrev").disabled = aqI === 0;
+  document.getElementById("aqNext").disabled = aqI === AQ.length - 1;
+}
+document.getElementById("aqChoices").addEventListener("click", e => {
+  const b = e.target.closest(".aq-choice"); if (!b || aqPick[aqI]) return;
+  aqPick[aqI] = b.dataset.k;
+  try { sessionStorage.setItem("api-quiz", JSON.stringify(aqPick)); } catch (e) {}
+  aqSide();
+});
+document.getElementById("aqDots").addEventListener("click", e => { const b = e.target.closest(".aq-dot"); if (b) aqShow(+b.dataset.i); });
+document.getElementById("aqPrev").onclick = () => aqI > 0 && aqShow(aqI - 1);
+document.getElementById("aqNext").onclick = () => aqI < AQ.length - 1 && aqShow(aqI + 1);
+document.getElementById("aqReset").onclick = () => { aqPick = {}; try { sessionStorage.removeItem("api-quiz"); } catch (e) {} aqShow(0); };
+aqShow(0);
 </script>
 
 </body>
