@@ -281,24 +281,6 @@ textarea.pin { resize: vertical; }
 
 /* 움직이는 화면 */
 .motion { display: grid; gap: 26px; }
-.sc-wrap { border-radius: 16px; overflow: hidden; border: 1px solid #2a2a30; background: #0c0c0e; box-shadow: 0 30px 60px -30px rgba(0,0,0,.45); }
-.sc-bar { display: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 16px; background: #17171b; color: #cfcac2; font-size: 15px; }
-.sc-bar span { display: flex; gap: 6px; } .sc-bar span i { width: 11px; height: 11px; border-radius: 50%; background: #3a3a42; }
-.sc-bar span i:nth-child(1) { background: #ff5f57; } .sc-bar span i:nth-child(2) { background: #febc2e; } .sc-bar span i:nth-child(3) { background: #28c840; }
-.sc-bar b { flex: 1; font-weight: 600; } .sc-bar .pbtn { text-decoration: none; }
-.sc-frame { position: relative; height: min(76vh, 760px); }
-.sc-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.sc-start { appearance: none; position: absolute; inset: 0; border: 0; cursor: pointer; color: #f1ede6; display: grid; place-content: center; gap: 10px; text-align: center;
-  background: radial-gradient(40% 50% at 65% 30%, rgba(61,90,254,.55), transparent), radial-gradient(35% 45% at 80% 70%, rgba(255,107,61,.45), transparent), radial-gradient(30% 40% at 25% 35%, rgba(138,63,252,.4), transparent), #0c0c0e; }
-.sc-start b { font-size: clamp(30px, 4vw, 52px); letter-spacing: -0.04em; }
-.sc-start small { font: 500 16px var(--font-body); opacity: .75; }
-.sc-start:focus-visible { outline: 3px solid var(--css); outline-offset: -3px; }
-.sc-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; align-items: start; }
-@media (max-width: 900px) { .sc-grid { grid-template-columns: 1fr; } }
-.sc-tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
-.sc-tbl td { padding: 8px 6px; border-top: 1px solid var(--line); vertical-align: top; line-height: 1.55; }
-.sc-tbl td:first-child { width: 34%; } .sc-tbl td:first-child small { display: block; font: 500 12px var(--font-code); color: var(--sub); }
-.sc-tbl .mo-ask { font-size: 14px; }
 .sc-tip { font-size: 14px; color: var(--sub); line-height: 1.6; }
 .mo-top { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .mo-chip { appearance: none; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 6px 14px; font: 700 15px var(--font-body); cursor: pointer; }
@@ -323,6 +305,75 @@ textarea.pin { resize: vertical; }
 .motion.reduce .mo-stage *, .motion.reduce .mo-stage *::before, .motion.reduce .mo-stage *::after { animation: none !important; transition: none !important; }
 
 /* 데모 조각 */
+/* 요즘 세련된 사이트 (어두운 무대) */
+.mo-stage { isolation: isolate; }
+.mo-stage.dk { background: #0c0c0e; color: #f1ede6; }
+.tr-sb { background: #0c0c0e; color: #f1ede6; }
+.tr-acc { color: #d6ff4a; }
+.tr-pre { position: absolute; inset: 0; display: grid; place-items: center; }
+.tr-hero { font: 800 46px var(--font-display); letter-spacing: -.04em; transform: translateY(40px); opacity: 0; transition: transform .9s cubic-bezier(.16, 1, .3, 1) .35s, opacity .9s .35s; }
+.tr-hero em, .tr-lines em, .tr-pin em, .tr-cf-foot em { font-family: Georgia, serif; font-style: italic; font-weight: 400; color: #d6ff4a; }
+.tr-load { position: absolute; inset: 0; background: #d6ff4a; color: #0c0c0e; padding: 14px 16px; display: flex; flex-direction: column; justify-content: flex-end; transition: transform .8s cubic-bezier(.8, 0, .2, 1); }
+.tr-load b { font: 800 64px/.9 var(--font-display); letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.tr-load i { display: block; height: 2px; background: #0c0c0e; width: 0; margin-top: 8px; }
+.tr-done .tr-load { transform: translateY(-100%); } .tr-done .tr-hero { transform: none; opacity: 1; }
+.tr-lines { font: 800 34px/1.1 var(--font-display); letter-spacing: -.05em; }
+.tr-lines span { display: block; overflow: hidden; padding-bottom: .06em; }
+.tr-lines i { display: inline-block; font-style: normal; animation: tr-up 1s cubic-bezier(.16, 1, .3, 1) both; }
+.tr-lines span:nth-child(2) i { animation-delay: .14s; }
+@keyframes tr-up { from { transform: translateY(110%); } }
+.tr-img { width: 62%; height: 76%; border-radius: 12px; overflow: hidden; position: relative; animation: tr-clip 1.2s cubic-bezier(.77, 0, .18, 1) both; }
+.tr-img i, .tr-zm i { position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, #ff9a5a, transparent 50%), radial-gradient(circle at 75% 70%, #6a5cff, transparent 55%), radial-gradient(circle at 50% 115%, #d6ff4a, transparent 45%), #1a1530; }
+.tr-img i { animation: tr-shrink 1.6s cubic-bezier(.16, 1, .3, 1) both; }
+.tr-img span { position: absolute; left: 12px; bottom: 10px; font: 800 22px/1 var(--font-display); color: #fff; letter-spacing: -.03em; }
+@keyframes tr-clip { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes tr-shrink { from { transform: scale(1.4); } }
+.tr-ss { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 12px 24px; }
+.tr-ss > div { display: grid; grid-template-rows: auto 1fr; gap: 4px; min-height: 0; }
+.tr-col { overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); min-height: 0; overscroll-behavior: contain; }
+.tr-col[data-k="s"] { overflow: hidden; touch-action: none; }
+.tr-col p { padding: 7px 10px; border-bottom: 1px solid var(--line); font-weight: 700; font-size: 14px; color: var(--ink); }
+.tr-scrub { position: sticky; top: 34px; font: 700 21px/1.45 var(--font-body); letter-spacing: -.03em; }
+.tr-scrub span { opacity: .15; }
+.tr-pin { position: sticky; top: 0; height: 190px; display: grid; place-items: center; overflow: hidden; }
+.tr-zm { position: absolute; inset: 0; clip-path: inset(30% 34% round 14px); }
+.tr-pin > b { position: relative; font: 800 30px/1 var(--font-display); text-align: center; color: #fff; letter-spacing: -.04em; }
+.tr-track { display: flex; gap: 10px; padding: 0 16px; width: max-content; will-change: transform; justify-self: start; }
+.tr-track div { flex: none; width: 128px; height: 128px; border-radius: 12px; background: #1b1b20; border: 1px solid rgba(255, 255, 255, .12); padding: 10px; display: flex; flex-direction: column; justify-content: space-between; font-weight: 700; font-size: 15px; }
+.tr-track div b { font: italic 400 40px/1 Georgia, serif; color: #d6ff4a; }
+.tr-track div:nth-child(3) { background: #d6ff4a; color: #111; } .tr-track div:nth-child(3) b { color: #111; }
+.tr-stk { padding: 14px 16px; }
+.tr-sc { position: sticky; top: 14px; height: 136px; border-radius: 14px; margin-bottom: 46px; padding: 14px 16px; font: 800 28px var(--font-display); letter-spacing: -.04em; transform-origin: center top; display: flex; flex-direction: column; justify-content: space-between; }
+.tr-sc small { font: 600 12px var(--font-body); opacity: .7; letter-spacing: 0; }
+.tr-vm { display: flex; flex-direction: column; justify-content: center; gap: 2px; place-items: initial; }
+.tr-row { display: flex; width: max-content; font: 800 40px/1.1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; will-change: transform; }
+.tr-row span { padding-right: .4em; } .tr-row.out { -webkit-text-stroke: 1px #f1ede6; color: transparent; }
+.tr-list { width: 88%; border-top: 1px solid rgba(255, 255, 255, .14); }
+.tr-list a { display: grid; grid-template-columns: 30px 1fr auto; align-items: center; padding: 9px 0; border-bottom: 1px solid rgba(255, 255, 255, .14); font: 700 19px var(--font-display); letter-spacing: -.03em; color: #f1ede6; transition: padding .45s cubic-bezier(.7, 0, .2, 1), color .3s; cursor: pointer; }
+.tr-list a:hover { padding-left: 12px; color: #d6ff4a; }
+.tr-list small, .tr-list span { font: 500 12px var(--font-body); color: #8a867f; }
+.tr-peek { position: absolute; left: 0; top: 0; width: 110px; height: 78px; margin: -39px 0 0 -55px; border-radius: 10px; pointer-events: none; transform: scale(0); transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), background .3s; z-index: 4; display: grid; place-items: center; font-size: 30px; }
+.tr-spot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 88%; }
+.tr-tile { position: relative; height: 112px; border-radius: 14px; background: #141417; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; --x: -300px; --y: -300px; }
+.tr-tile::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; background: radial-gradient(170px circle at var(--x) var(--y), #d6ff4a, transparent 60%), rgba(255, 255, 255, .1);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.tr-tile::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(200px circle at var(--x) var(--y), rgba(255, 255, 255, .08), transparent 60%); pointer-events: none; }
+.tr-tile small { color: #8a867f; font-size: 12px; } .tr-tile b { font: 800 34px var(--font-display); letter-spacing: -.05em; }
+.tr-bento { width: 88%; height: 150px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr; gap: 6px; grid-auto-flow: dense; }
+.tr-bento i { border-radius: 10px; display: grid; place-items: center; font-size: 22px; font-style: normal; animation: mo-pop .5s cubic-bezier(.34, 1.56, .64, 1) both; }
+.tr-grain { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(circle at 30% 40%, #6a5cff, transparent 55%), radial-gradient(circle at 75% 60%, #ff6b3d, transparent 50%), #0c0c0e; display: grid; place-items: center; }
+.tr-grain b { font: 800 40px var(--font-display); color: #fff; letter-spacing: -.04em; }
+.tr-grain i { position: absolute; inset: -50%; opacity: .25; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: tr-grain 1s steps(6) infinite; pointer-events: none; }
+.tr-grain.off i { display: none; }
+@keyframes tr-grain { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-3%, 2%); } 40% { transform: translate(2%, -4%); } 60% { transform: translate(-4%, -1%); } 80% { transform: translate(3%, 3%); } }
+.tr-cf-main { position: relative; z-index: 1; background: #0c0c0e; height: 330px; padding: 18px; display: grid; align-content: space-between; border-radius: 0 0 18px 18px; font-weight: 700; }
+.tr-cf-foot { position: sticky; bottom: 0; z-index: 0; height: 150px; background: #f1ede6; color: #0c0c0e; padding: 14px 16px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+.tr-cf-foot b { font: 800 44px/.9 var(--font-display); letter-spacing: -.05em; } .tr-cf-foot small { font-size: 12px; color: #555; }
+.tr-pt { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.tr-pg { font: 800 34px var(--font-display); letter-spacing: -.04em; }
+.tr-pt nav { position: absolute; top: 9px; left: 12px; display: flex; gap: 6px; z-index: 4; }
+.tr-pt nav button { appearance: none; border: 1px solid rgba(255, 255, 255, .25); background: none; color: inherit; border-radius: 999px; padding: 3px 11px; font: 600 13px var(--font-body); cursor: pointer; }
+.tr-wipe { position: absolute; inset: 0; background: #d6ff4a; transform: translateY(100%); z-index: 3; }
 .mo-sq { width: 56px; height: 56px; border-radius: 14px; background: var(--css); }
 .mo-ball { width: 32px; height: 32px; border-radius: 50%; background: var(--css); }
 .mo-btn { appearance: none; border: 0; background: var(--css); color: #fff; font: 700 16px var(--font-body); padding: 12px 22px; border-radius: 12px; cursor: pointer; position: relative; overflow: hidden; }
@@ -456,7 +507,7 @@ textarea.pin { resize: vertical; }
     <button class="pagebtn" data-page="glos"><span class="pn">3</span><span>용어 사전<small>부록 1~5 · 낱말 찾기</small></span></button>
     <button class="pagebtn" data-page="plan"><span class="pn">4</span><span>내 앱 구상하기<small>MVP · 화면 · PRD → AI 프롬프트</small></span></button>
     <button class="pagebtn" data-page="api"><span class="pn">5</span><span>API 이해하기<small>작은 앱 15개 · 어떤 API를 썼을까?</small></span></button>
-    <button class="pagebtn" data-page="motion"><span class="pn">6</span><span>움직이는 화면<small>세련된 사이트 쇼케이스 · 모션 용어 34가지</small></span></button>
+    <button class="pagebtn" data-page="motion"><span class="pn">6</span><span>움직이는 화면<small>세련된 사이트 효과 · 모션 용어 49가지</small></span></button>
     <button class="pagebtn" data-page="unity"><span class="pn">7</span><span>Unity 체험<small>Unity 게임 해 보기 · 엔진 고르기</small></span></button>
   </nav>
 
@@ -641,34 +692,20 @@ fetch("https://screen-lab-ten.vercel.app/api/quiz")
   <section class="motion pg-motion" aria-label="움직이는 화면" hidden>
     <div>
       <h2>움직이는 화면</h2>
-      <p class="lead">요즘 '세련됐다' 싶은 사이트는 스크롤에 맞춰 화면이 멈추고, 커지고, 옆으로 흐르고, 글자가 솟아올라요. 아래는 그런 사이트를 직접 만들어 본 거예요. 스크롤해 보면서 왼쪽 아래 <b>'지금 보는 효과'</b> 이름을 확인하고, 마음에 들면 복사해서 AI에게 그대로 부탁하세요.</p>
+      <p class="lead">요즘 웹페이지는 살짝살짝 움직여요. 용어마다 실제로 어떻게 보이는지 직접 눌러 보세요. 마음에 드는 움직임은 아래 'AI에게' 문장을 눌러 복사해서 그대로 부탁하면 돼요. 맨 앞 <b>'요즘 세련된 사이트'</b>에는 디자인 상을 받는 사이트들이 자주 쓰는 효과를 모았어요.</p>
     </div>
-    <div class="sc-wrap">
-      <div class="sc-bar"><span><i></i><i></i><i></i></span><b>vibe26 · 세련된 웹 모션 쇼케이스</b><a class="pbtn primary" href="/showcase/" target="_blank" rel="noopener">↗ 새 창에서 크게 보기</a></div>
-      <div class="sc-frame">
-        <iframe id="scFrame" title="세련된 웹 모션 쇼케이스" allow="clipboard-write" hidden></iframe>
-        <button class="sc-start" id="scStart"><b>▶ 쇼케이스 열기</b><small>안에서 마우스 휠로 스크롤해 보세요 · 크게 보면 훨씬 멋져요</small></button>
-      </div>
+    <div class="pbox sc-tools"><h3>이런 사이트는 이걸로 만들어요</h3>
+      <ul class="un-list">
+        <li><b>GSAP + ScrollTrigger</b> 스크롤에 맞춘 거의 모든 움직임. SplitText로 글자 쪼개기. 2025년부터 전부 무료</li>
+        <li><b>Lenis</b> 휠을 굴리면 미끄러지듯 내려가는 부드러운 스크롤</li>
+        <li><b>Motion</b> (옛 Framer Motion) React 앱의 스프링·제스처·화면 전환</li>
+        <li><b>Three.js · Spline</b> 화면 속 3D 물체. Spline은 마우스로 만들어요</li>
+        <li><b>Lottie · Rive</b> 디자이너가 만든 움직이는 아이콘·캐릭터를 그대로 붙여요</li>
+      </ul>
+      <h3 style="margin-top:6px">여러 효과를 한 번에 부탁하는 문장</h3>
+      <button class="mo-ask" title="눌러서 복사"><b>AI에게</b>"어워즈(Awwwards) 수상작 느낌으로 세련된 소개 페이지를 만들어 줘. GSAP ScrollTrigger와 Lenis를 써서 첫 화면 제목은 줄마다 솟아오르고, 스크롤하면 화면이 멈추며 사진이 커지고, 카드가 옆으로 흐르거나 쌓이게 해 줘. 어두운 배경, 큰 글씨, 넓은 여백, 포인트 색 하나만. 움직임 줄이기 설정을 켠 사람에게는 움직임을 꺼 줘."</button>
+      <p class="sc-tip">참고할 곳: Awwwards, Godly, Land-book 같은 사이트 모음에서 마음에 드는 화면을 캡처해서 AI에게 보여 주면 더 잘 만들어요.</p>
     </div>
-    <div class="sc-grid">
-      <div class="pbox"><h3>이 쇼케이스에 들어간 효과 10가지</h3>
-        <table class="sc-tbl"><tbody id="scList"></tbody></table>
-      </div>
-      <div class="pbox"><h3>이런 사이트는 이걸로 만들어요</h3>
-        <ul class="un-list">
-          <li><b>GSAP + ScrollTrigger</b> 스크롤에 맞춘 거의 모든 움직임. SplitText로 글자 쪼개기. 2025년부터 전부 무료</li>
-          <li><b>Lenis</b> 휠을 굴리면 미끄러지듯 내려가는 부드러운 스크롤</li>
-          <li><b>Motion</b> (옛 Framer Motion) React 앱의 스프링·제스처·화면 전환</li>
-          <li><b>Three.js · Spline</b> 화면 속 3D 물체. Spline은 마우스로 만들어요</li>
-          <li><b>Lottie · Rive</b> 디자이너가 만든 움직이는 아이콘·캐릭터를 그대로 붙여요</li>
-        </ul>
-        <h3 style="margin-top:6px">통째로 부탁하는 문장</h3>
-        <button class="mo-ask" id="scAll" title="눌러서 복사"><b>AI에게</b>"어워즈(Awwwards) 수상작 느낌으로 세련된 소개 페이지를 만들어 줘. GSAP ScrollTrigger와 Lenis를 써서 첫 화면 제목은 글자가 솟아오르고, 스크롤하면 화면이 멈추며 사진이 커지고, 카드가 옆으로 흐르거나 쌓이게 해 줘. 어두운 배경, 큰 글씨, 넓은 여백, 포인트 색 하나만. 움직임 줄이기 설정을 켠 사람에게는 움직임을 꺼 줘."</button>
-        <p class="sc-tip">참고할 곳: Awwwards, Godly, Land-book 같은 사이트 모음에서 마음에 드는 화면을 찾아 캡처해서 AI에게 보여 주면 더 잘 만들어요.</p>
-      </div>
-    </div>
-    <h2 style="margin-top:14px">기본 움직임 사전</h2>
-    <p class="lead" style="margin-top:-14px">위 효과들도 결국 이 작은 움직임들을 조합한 거예요. 용어마다 눌러 보고, 'AI에게' 문장을 눌러 복사하세요.</p>
     <div class="mo-top" id="moTop"></div>
     <div id="moSecs" style="display:grid;gap:30px"></div>
 
@@ -1866,6 +1903,7 @@ aqShow(0);
 
 // ── 움직이는 화면 ──
 const MO_SEC = [
+  ["trend", "요즘 세련된 사이트", "디자인 상(어워즈)을 받는 사이트들이 자주 쓰는 효과예요. 대부분 스크롤에 맞춰 움직여요. 까만 칸 안을 스크롤하거나 마우스를 올려 보세요."],
   ["basic", "기본 재료", "움직임을 이루는 재료예요. 얼마나 오래, 어떤 빠르기로 움직일지 정해요."],
   ["enter", "나타나기", "화면에 무언가가 처음 등장할 때 쓰는 움직임이에요."],
   ["react", "반응하기", "누르고, 올리고, 끄는 손짓에 화면이 대답해요."],
@@ -1875,7 +1913,110 @@ const MO_SEC = [
   ["care", "배려", "움직임에 어지러움을 느끼는 사람도 있어요."]
 ];
 const moRaf = fn => { let id = 0, on = true; const loop = t => { fn(t); if (on) id = requestAnimationFrame(loop); }; id = requestAnimationFrame(loop); return () => { on = false; cancelAnimationFrame(id); }; };
+const moProg = b => b.scrollTop / Math.max(1, b.scrollHeight - b.clientHeight);
 const MO = [
+{ s: "trend", dk: 1, n: "프리로더", en: "preloader",
+  d: "들어오자마자 큰 숫자가 0→100으로 세어지고, 막이 위로 걷히며 첫 화면이 나와요. 기다리는 시간을 '연출'로 바꿔요.",
+  ask: "처음 들어오면 큰 숫자가 0부터 100까지 세어지는 로딩 화면을 보여 주고, 다 차면 막이 위로 걷히며 첫 화면 제목이 올라오게(preloader) 해 줘",
+  html: '<div class="tr-pre"><div class="tr-hero">VIBE<em>/26</em></div><div class="tr-load"><b>0</b><i></i></div></div>',
+  init: s => { const w = s.querySelector(".tr-pre"), n = w.querySelector(".tr-load b"), bar = w.querySelector(".tr-load i"); let t0 = 0, tid, stop;
+    stop = moRaf(t => { t0 = t0 || t; const p = Math.min(1, (t - t0) / 1400); n.textContent = Math.round(p * 100); bar.style.width = p * 100 + "%"; if (p >= 1) { stop(); tid = setTimeout(() => w.classList.add("tr-done"), 150); } });
+    return () => { stop(); clearTimeout(tid); }; } },
+{ s: "trend", dk: 1, n: "줄 마스크 리빌", en: "line mask reveal",
+  d: "제목을 줄마다 보이지 않는 창 뒤에 숨겨 뒀다가 아래에서 쑥 올려요. 글자 하나씩 나오는 것보다 묵직하고 고급스러워요.",
+  ask: "큰 제목을 줄마다 가림막(마스크) 뒤에 숨겨 뒀다가 한 줄씩 아래에서 쑥 올라오게(line mask reveal, GSAP SplitText) 해 줘",
+  html: '<div class="tr-lines"><span><i>생각을 <em>움직이는</em></i></span><span><i>화면으로.</i></span></div>' },
+{ s: "trend", dk: 1, n: "이미지 마스크 리빌", en: "clip-path reveal",
+  d: "사진이 아래에서부터 걷히듯 드러나면서 동시에 살짝 줄어들어요. 두 움직임이 겹쳐서 영화 같은 느낌이 나요.",
+  ask: "사진이 화면에 들어오면 아래에서 위로 걷히듯 드러나고(clip-path reveal), 동시에 1.3배에서 원래 크기로 줄어들게 해 줘",
+  html: '<div class="tr-img"><i></i><span>SUMMER<br>CAMP</span></div>' },
+{ s: "trend", n: "부드러운 스크롤", en: "smooth scroll · Lenis", hint: "두 칸에서 각각 마우스 휠을 굴려 보세요",
+  d: "휠을 굴리면 툭툭 끊기지 않고 미끄러지듯 따라와요. 고급 사이트의 '쫀득한' 느낌의 정체예요. 두 칸을 비교해 보세요.",
+  ask: "마우스 휠로 내릴 때 툭툭 끊기지 않고 미끄러지듯 부드럽게 스크롤되게(Lenis smooth scroll) 해 줘",
+  html: '<div class="tr-ss">' + [["n", "그냥 스크롤"], ["s", "Lenis 스크롤"]].map(([k, t]) => '<div><span class="mo-lbl">' + t + '</span><div class="tr-col" data-k="' + k + '"><div class="tr-in">' +
+    Array.from({ length: 14 }, (_, i) => "<p>📄 " + (i + 1) + "번째 줄</p>").join("") + "</div></div></div>").join("") + "</div>",
+  init: s => { const col = s.querySelector('[data-k="s"]'), inn = col.querySelector(".tr-in"); let y = 0, t = 0;
+    const max = () => inn.scrollHeight - col.clientHeight;
+    col.addEventListener("wheel", e => { e.preventDefault(); t = Math.max(0, Math.min(max(), t + e.deltaY)); }, { passive: false });
+    col.onpointermove = e => { if (e.buttons) t = Math.max(0, Math.min(max(), t - e.movementY * 2)); };
+    return moRaf(() => { y += (t - y) * .08; inn.style.transform = "translateY(" + (-y) + "px)"; }); } },
+{ s: "trend", dk: 1, n: "스크롤 스크럽 문장", en: "scroll-scrubbed text", hint: "이 칸 안을 스크롤해 보세요",
+  d: "흐릿한 문장이 스크롤한 만큼 단어씩 진해져요. 올리면 다시 흐려져요. 스크롤 막대가 곧 재생 막대예요(스크럽).",
+  ask: "긴 문장이 처음엔 흐릿하다가 스크롤하는 만큼 단어가 하나씩 밝아지게(scroll scrub text, GSAP ScrollTrigger) 해 줘. 올리면 다시 흐려지게",
+  html: '<div class="mo-scroll tr-sb"><div style="height:560px"><p class="tr-scrub">' + "좋은 움직임은 눈에 띄지 않아요. 어디를 봐야 할지 조용히 알려 줄 뿐이에요.".split(" ").map(w => "<span>" + w + " </span>").join("") + "</p></div></div>",
+  init: s => { const b = s.querySelector(".mo-scroll"), w = [...b.querySelectorAll(".tr-scrub span")];
+    b.onscroll = () => { const p = moProg(b) * 1.15 * w.length; w.forEach((x, i) => x.style.opacity = Math.max(.15, Math.min(1, p - i))); }; } },
+{ s: "trend", dk: 1, n: "스크롤 줌", en: "pinned scroll zoom", hint: "이 칸 안을 스크롤해 보세요",
+  d: "화면이 잠깐 멈춘(pin) 채로, 내리는 만큼 가운데 작은 그림이 화면 전체로 커져요. 다음 이야기로 넘어가는 문처럼 써요.",
+  ask: "화면을 잠깐 멈춰 두고(pin) 스크롤하는 만큼 가운데 작은 사진이 화면 전체로 커지게(scroll zoom, GSAP ScrollTrigger) 해 줘",
+  html: '<div class="mo-scroll tr-sb" style="padding:0"><div style="height:600px"><div class="tr-pin"><div class="tr-zm"><i></i></div><b>Scroll<br><em>to zoom</em></b></div></div></div>',
+  init: s => { const b = s.querySelector(".mo-scroll"), z = b.querySelector(".tr-zm"), im = z.querySelector("i");
+    b.onscroll = () => { const q = 1 - Math.min(1, moProg(b) * 1.25); z.style.clipPath = "inset(" + 30 * q + "% " + 34 * q + "% round " + 14 * q + "px)"; im.style.transform = "scale(" + (1 + .3 * q) + ")"; }; } },
+{ s: "trend", dk: 1, n: "가로 스크롤", en: "horizontal scroll", hint: "이 칸 안을 아래로 스크롤해 보세요",
+  d: "아래로 내리는데 이 구역에서는 화면이 멈추고 카드가 옆으로 지나가요. 과정·작품을 순서대로 보여 줄 때 좋아요.",
+  ask: "이 구역에서는 화면이 멈추고, 세로로 스크롤하는 만큼 카드들이 옆으로 지나가게(horizontal scroll, GSAP ScrollTrigger pin) 해 줘",
+  html: '<div class="mo-scroll tr-sb" style="padding:0"><div style="height:640px"><div class="tr-pin"><div class="tr-track">' +
+    ["아이디어", "화면 그리기", "AI에게 부탁", "고치기", "배포"].map((t, i) => "<div><b>0" + (i + 1) + "</b>" + t + "</div>").join("") + "</div></div></div></div>",
+  init: s => { const b = s.querySelector(".mo-scroll"), tr = b.querySelector(".tr-track");
+    b.onscroll = () => tr.style.transform = "translateX(" + (-moProg(b) * Math.max(0, tr.scrollWidth - b.clientWidth)) + "px)"; } },
+{ s: "trend", dk: 1, n: "쌓이는 카드", en: "sticky stacking cards", hint: "이 칸 안을 스크롤해 보세요",
+  d: "카드가 위에 딱 붙고, 다음 카드가 그 위로 올라와 쌓여요. 아래 카드는 살짝 작아지고 어두워져서 깊이가 생겨요.",
+  ask: "카드가 스크롤하면 위에 붙고, 다음 카드가 그 위로 쌓이면서 아래 카드는 살짝 작아지고 어두워지게(sticky stacking cards) 해 줘",
+  html: '<div class="mo-scroll tr-sb tr-stk">' + [["#ece7dc", "#111", "GSAP"], ["#2b2bd9", "#fff", "Lenis"], ["#ff6b3d", "#111", "Motion"], ["#d6ff4a", "#111", "Three.js"]].map(([bg, c, t], i) =>
+    '<div class="tr-sc" style="background:' + bg + ";color:" + c + '"><small>0' + (i + 1) + "</small>" + t + "</div>").join("") + '<div style="height:60px"></div></div>',
+  init: s => { const b = s.querySelector(".mo-scroll"), cs = [...b.querySelectorAll(".tr-sc")], tops = cs.map(c => c.offsetTop);
+    b.onscroll = () => cs.forEach((c, i) => { if (!cs[i + 1]) return; const t = Math.max(0, Math.min(1, 1 - (tops[i + 1] - b.scrollTop - 14) / 150));
+      c.style.transform = "scale(" + (1 - .1 * t) + ")"; c.style.filter = "brightness(" + (1 - .35 * t) + ")"; }); } },
+{ s: "trend", dk: 1, n: "스크롤 속도 마키", en: "velocity marquee", hint: "이 칸 안을 빠르게 스크롤해 보세요",
+  d: "글자 띠가 흐르다가 스크롤을 빨리 할수록 더 빨라지고 기울어져요. 화면이 내 손에 반응한다는 느낌을 줘요.",
+  ask: "글자 띠가 옆으로 끝없이 흐르다가 스크롤을 빨리 할수록 더 빨라지고 살짝 기울어지게(velocity marquee) 해 줘. 두 줄은 반대로 흐르고 한 줄은 테두리 글씨로",
+  html: '<div class="mo-scroll tr-sb" style="padding:0"><div style="height:1400px"><div class="tr-pin tr-vm">' +
+    ['HTML · CSS · JS · API · ', 'Motion · Scroll · Hover · '].map((t, i) => '<div class="tr-row' + (i ? " out" : "") + '"><span>' + t + "</span><span>" + t + "</span></div>").join("") + "</div></div></div>",
+  init: s => { const b = s.querySelector(".mo-scroll"), rows = [...b.querySelectorAll(".tr-row")]; let x = 0, v = 0, last = 0;
+    b.onscroll = () => { v += (b.scrollTop - last) * .25; last = b.scrollTop; };
+    return moRaf(() => { v *= .9; x += .6 + Math.min(14, Math.abs(v)); const k = Math.max(-12, Math.min(12, -v * .8));
+      rows.forEach((r, i) => { const h = r.scrollWidth / 2, m = x % h; r.style.transform = "translateX(" + (i ? m - h : -m) + "px) skewX(" + k + "deg)"; }); }); } },
+{ s: "trend", dk: 1, n: "목록 호버 미리보기", en: "hover image reveal", hint: "목록 위로 마우스를 움직여 보세요",
+  d: "목록 줄에 마우스를 올리면 미리보기 그림이 마우스를 따라다니며 나타나요. 줄은 살짝 밀리고 색이 바뀌어요.",
+  ask: "목록 줄에 마우스를 올리면 그 항목의 미리보기 카드가 마우스를 살짝 늦게 따라다니며 나타나게(hover image reveal) 해 줘. 줄은 오른쪽으로 살짝 밀리고 색이 바뀌게",
+  html: '<div class="tr-list">' + [["글쓰기 도우미", "AI"], ["API 퀴즈", "퀴즈"], ["공 굴리기", "Unity"]].map(([t, k], i) => '<a data-i="' + i + '"><small>0' + (i + 1) + "</small>" + t + "<span>" + k + "</span></a>").join("") + '</div><i class="tr-peek"></i>',
+  init: s => { const pk = s.querySelector(".tr-peek"), C = [["#ff7a45", "✍️"], ["#4f6bff", "🧩"], ["#d6ff4a", "⚽"]]; let tx = 0, ty = 0, x = 0, y = 0;
+    s.onmousemove = e => { const r = s.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; };
+    s.querySelectorAll(".tr-list a").forEach(a => { a.onmouseenter = () => { const c = C[a.dataset.i]; pk.style.background = c[0]; pk.textContent = c[1]; pk.style.transform = "scale(1) rotate(-6deg)"; };
+      a.onmouseleave = () => pk.style.transform = "scale(0)"; });
+    return moRaf(() => { x += (tx - x) * .14; y += (ty - y) * .14; pk.style.left = x + "px"; pk.style.top = y + "px"; }); } },
+{ s: "trend", dk: 1, n: "스포트라이트 테두리", en: "spotlight border", hint: "칸 위로 마우스를 움직여 보세요",
+  d: "마우스가 있는 자리만 테두리가 빛나요. 옆 칸 테두리까지 같이 빛나서 손전등을 비추는 것 같아요.",
+  ask: "카드에 마우스를 올리면 마우스가 있는 자리만 테두리가 은은하게 빛나는 스포트라이트 효과(spotlight border)를 넣어 줘. 옆 카드 테두리도 같이 빛나게",
+  html: '<div class="tr-spot"><div class="tr-tile"><small>이번 달 방문</small><b>1,284</b></div><div class="tr-tile"><small>완성한 앱</small><b>12</b></div></div>',
+  init: s => { const ts = [...s.querySelectorAll(".tr-tile")];
+    s.onmousemove = e => ts.forEach(t => { const r = t.getBoundingClientRect(); t.style.setProperty("--x", e.clientX - r.left + "px"); t.style.setProperty("--y", e.clientY - r.top + "px"); });
+    s.onmouseleave = () => ts.forEach(t => { t.style.setProperty("--x", "-300px"); t.style.setProperty("--y", "-300px"); }); } },
+{ s: "trend", dk: 1, n: "벤토 그리드", en: "bento grid",
+  d: "크기가 다른 네모 칸을 도시락처럼 빈틈없이 채워요. 애플 발표 화면에서 유행해서 요즘 소개 페이지마다 보여요.",
+  ask: "기능 소개를 크기가 다른 네모 칸들로 도시락처럼 배치하고(bento grid), 칸들이 하나씩 톡톡 나타나게 해 줘",
+  html: '<div class="tr-bento">' + [["grid-column:span 2;background:#2b2bd9", "📊"], ["grid-row:span 2;background:#d6ff4a", "✨"], ["background:#ff6b3d", "💬"], ["background:#26262c", "⚙️"], ["grid-column:span 2;background:#ece7dc", "🗓️"]]
+    .map(([st, e], i) => '<i style="' + st + ";animation-delay:" + i * .09 + 's">' + e + "</i>").join("") + "</div>" },
+{ s: "trend", dk: 1, n: "필름 그레인", en: "grain · noise", hint: "버튼으로 껐다 켜 보세요",
+  d: "매끈한 색 위에 옛날 필름 같은 자글자글한 점을 얇게 깔아요. 화면이 차갑지 않고 종이·필름처럼 따뜻해 보여요.",
+  ask: "배경 전체에 은은한 필름 그레인(노이즈) 질감을 얇게 깔아 줘. 살짝 지글거리게 움직이고, 클릭은 방해하지 않게",
+  html: '<div class="tr-grain"><b>Grain</b><i></i></div><button class="mo-btn" style="position:absolute;right:12px;bottom:12px;padding:6px 14px;font-size:13px">그레인 끄기</button>',
+  init: s => { const g = s.querySelector(".tr-grain"), b = s.querySelector(".mo-btn"); b.onclick = () => { const off = g.classList.toggle("off"); b.textContent = off ? "그레인 켜기" : "그레인 끄기"; }; } },
+{ s: "trend", dk: 1, n: "페이지 전환", en: "page transition", hint: "위쪽 메뉴를 눌러 보세요",
+  d: "메뉴를 누르면 화면이 툭 바뀌지 않고, 색 막이 덮었다가 걷히며 다음 화면이 나와요. 요즘은 브라우저 기능(View Transitions)으로도 만들어요.",
+  ask: "메뉴를 눌러 다른 화면으로 갈 때 색깔 막이 아래에서 덮었다가 위로 걷히며 새 화면이 나오게(page transition, View Transitions API) 해 줘",
+  html: '<div class="tr-pt"><nav><button data-p="🏠 홈">홈</button><button data-p="📚 수업 자료">자료</button><button data-p="💬 문의하기">문의</button></nav><div class="tr-pg">🏠 홈</div><i class="tr-wipe"></i></div>',
+  init: s => { const pg = s.querySelector(".tr-pg"), w = s.querySelector(".tr-wipe"); let busy = false;
+    s.querySelectorAll(".tr-pt nav button").forEach(b => b.onclick = () => { if (busy) return; busy = true; const E = "cubic-bezier(.8,0,.2,1)";
+      w.animate([{ transform: "translateY(100%)" }, { transform: "translateY(0)" }], { duration: 450, easing: E, fill: "forwards" }).onfinish = () => {
+        pg.textContent = b.dataset.p;
+        pg.animate([{ transform: "translateY(30px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 650, delay: 180, easing: "cubic-bezier(.16,1,.3,1)", fill: "backwards" });
+        w.animate([{ transform: "translateY(0)" }, { transform: "translateY(-100%)" }], { duration: 500, easing: E, fill: "forwards" }).onfinish = () => busy = false; }; }); } },
+{ s: "trend", dk: 1, n: "커튼 푸터", en: "curtain footer reveal", hint: "이 칸 안을 끝까지 스크롤해 보세요",
+  d: "맨 아래에서 본문이 커튼처럼 위로 걷히며, 뒤에 가만히 있던 푸터가 드러나요. 페이지가 끝났다는 걸 멋지게 알려 줘요.",
+  ask: "페이지 맨 아래에서 본문이 커튼처럼 위로 걷히며 뒤에 숨어 있던 푸터가 드러나게(curtain footer reveal) 해 줘",
+  html: '<div class="mo-scroll tr-sb" style="padding:0"><div class="tr-cf-main"><p>⬇️ 끝까지 내려 보세요</p><p class="tr-acc">본문이 커튼처럼 위로 걷혀요</p></div><footer class="tr-cf-foot"><b>THE END<em>.</em></b><small>뒤에 숨어 있던 푸터</small></footer></div>' },
+
 { s: "basic", n: "트랜지션", en: "transition", hint: "상자를 눌러 보세요",
   d: "한 상태에서 다른 상태로 부드럽게 바뀌는 것. 바로 휙 바뀌지 않고 그 사이를 이어 줘요.",
   ask: "버튼 색이 바뀔 때 0.3초 동안 부드럽게 바뀌게(transition) 해 줘",
@@ -2074,8 +2215,9 @@ const moTop = document.getElementById("moTop");
 moTop.innerHTML = MO_SEC.map(([k, t]) => '<button class="mo-chip" data-go="mo-sec-' + k + '">' + t + "</button>").join("") +
   '<button class="mo-chip mo-toggle" id="moReduce" aria-pressed="false">🛑 움직임 끄기</button>';
 document.getElementById("moSecs").innerHTML = MO_SEC.map(([k, t, d]) => '<section class="mo-sec" id="mo-sec-' + k + '"><h3>' + t + "</h3><p>" + d + '</p><div class="mo-grid">' +
-  MO.map((m, i) => m.s !== k ? "" : '<article class="mo-card"><div class="mo-stage" data-i="' + i + '"></div><div class="mo-body"><h4>' + esc(m.n) + "<small>" + esc(m.en) + "</small></h4><p>" + esc(m.d) +
+  MO.map((m, i) => m.s !== k ? "" : '<article class="mo-card"><div class="mo-stage' + (m.dk ? " dk" : "") + '" data-i="' + i + '"></div><div class="mo-body"><h4>' + esc(m.n) + "<small>" + esc(m.en) + "</small></h4><p>" + esc(m.d) +
     '</p><button class="mo-ask" title="눌러서 복사"><b>AI에게</b>"' + esc(m.ask) + '"</button></div></article>').join("") + "</div></section>").join("");
+document.getElementById("mo-sec-trend").appendChild(document.querySelector(".sc-tools"));
 function moReduce(on) {
   moRoot.classList.toggle("reduce", on);
   const t = document.getElementById("moReduce"); t.setAttribute("aria-pressed", on); t.textContent = on ? "🐢 움직임 다시 켜기" : "🛑 움직임 끄기";
@@ -2104,32 +2246,6 @@ document.getElementById("moSecs").addEventListener("click", e => {
   (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => pToast("복사했어요. AI 채팅창에 붙여 넣으세요"), () => pToast("복사가 안 돼요. 직접 드래그해서 복사해 주세요"));
 });
 if (matchMedia("(prefers-reduced-motion: reduce)").matches) moReduce(true);
-
-// 세련된 웹 모션 쇼케이스 (/showcase/) — 효과 이름·뜻·부탁 문장
-const SC_FX = [
-  ["프리로더", "preloader", "들어오자마자 숫자가 0→100 세어지고, 막이 위로 걷히며 첫 화면이 나와요.", "처음 들어오면 숫자가 0부터 100까지 세어지는 로딩 화면을 보여 주고, 끝나면 막이 위로 걷히며 첫 화면이 나오게 해 줘"],
-  ["텍스트 리빌", "split text reveal", "큰 제목이 줄마다 가려져 있다가 글자가 하나씩 아래에서 솟아올라요.", "첫 화면 큰 제목이 줄마다 아래에서 한 글자씩 솟아오르게(GSAP SplitText, 마스크 리빌) 해 줘"],
-  ["오로라 + 그레인", "aurora gradient · grain", "흐릿한 색 덩어리가 천천히 떠다니고, 그 위에 옛날 필름 같은 자글자글한 노이즈가 깔려요.", "배경에 흐릿한 색 덩어리가 천천히 떠다니는 오로라 그라데이션과 은은한 필름 그레인(노이즈)을 깔아 줘"],
-  ["커스텀 커서 · 자석 버튼", "custom cursor · magnetic", "마우스가 동그라미로 바뀌고, 버튼 근처에 가면 버튼이 끌려와요.", "마우스를 따라다니는 동그라미 커서를 만들고, 버튼 근처에 가면 버튼이 마우스 쪽으로 끌려오게(magnetic) 해 줘"],
-  ["스크롤 속도 마키", "velocity marquee", "글자 띠가 흐르다가 스크롤을 빨리 하면 더 빨라지고 기울어져요.", "글자 띠가 옆으로 끝없이 흐르다가 스크롤을 빨리 할수록 더 빨라지고 살짝 기울어지게 해 줘"],
-  ["스크롤 스크럽 문장", "scroll-scrubbed text", "흐릿한 문장이 스크롤하는 만큼 단어씩 밝아져요. 올리면 다시 흐려져요.", "긴 문장이 처음엔 흐릿하다가 스크롤하는 만큼 단어가 하나씩 밝아지게(scroll scrub) 해 줘"],
-  ["스크롤 줌", "pinned scroll zoom", "화면이 잠깐 멈추고, 가운데 작은 그림이 화면 전체로 커져요.", "화면을 잠깐 멈춰 두고(pin) 스크롤하는 만큼 가운데 작은 사진이 화면 전체로 커지게 해 줘"],
-  ["가로 스크롤", "horizontal scroll", "아래로 내리는데 카드는 옆으로 지나가요.", "이 구역에서는 화면이 멈추고 세로 스크롤에 맞춰 카드들이 옆으로 지나가게(GSAP ScrollTrigger pin) 해 줘"],
-  ["쌓이는 카드", "sticky stacking cards", "카드가 위에 붙고 다음 카드가 그 위로 쌓이며, 아래 카드는 작아지고 어두워져요.", "카드가 스크롤하면 위에 붙고, 다음 카드가 그 위로 쌓이면서 아래 카드는 살짝 작아지고 어두워지게 해 줘"],
-  ["벤토 · 스포트라이트 · 커튼 푸터", "bento · spotlight · footer reveal", "도시락처럼 나눈 칸, 마우스 자리만 빛나는 테두리, 커튼처럼 걷히며 드러나는 맨 아래.", "크기가 다른 칸을 도시락처럼 배치하고(bento grid), 마우스 자리만 테두리가 빛나게(spotlight) 해 줘. 맨 아래에서는 본문이 커튼처럼 걷히며 푸터가 드러나게"]
-];
-document.getElementById("scList").innerHTML = SC_FX.map(([n, en, d, ask]) => "<tr><td><b>" + esc(n) + "</b><small>" + esc(en) + "</small></td><td>" + esc(d) +
-  '<br><button class="mo-ask" title="눌러서 복사"><b>AI에게</b>"' + esc(ask) + '"</button></td></tr>').join("");
-document.querySelector(".sc-grid").addEventListener("click", e => {
-  const a = e.target.closest(".mo-ask"); if (!a) return;
-  const t = a.textContent.replace(/^AI에게/, "").replace(/^"|"$/g, "");
-  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => pToast("복사했어요. AI 채팅창에 붙여 넣으세요"), () => pToast("복사가 안 돼요. 직접 드래그해서 복사해 주세요"));
-});
-document.getElementById("scStart").onclick = e => {
-  const f = document.getElementById("scFrame");
-  f.src = "/showcase/"; f.hidden = false; e.currentTarget.remove();
-  f.addEventListener("load", () => f.focus(), { once: true });
-};
 
 // ── Unity 체험 ── 게임은 17MB쯤이라 시작을 눌렀을 때만 불러와요
 document.getElementById("unStart").onclick = e => {
