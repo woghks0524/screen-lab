@@ -279,6 +279,105 @@ textarea.pin { resize: vertical; }
 .aq-fb h4 { font-size: 15px; color: var(--sub); }
 .aq-nav { display: flex; justify-content: space-between; gap: 8px; }
 
+/* API 붙여 보기 (가상 사이트 구름상자) */
+.apil { display: grid; gap: 18px; margin-top: 40px; padding-top: 34px; border-top: 2px dashed var(--line); }
+.al-steps { list-style: none; display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; counter-reset: al; }
+.al-steps button { appearance: none; width: 100%; border: 1.5px solid var(--line); background: var(--paper); color: var(--sub); border-radius: 12px; padding: 8px 10px; font: 700 15px var(--font-body); cursor: pointer; display: flex; gap: 8px; align-items: center; }
+.al-steps button:disabled { cursor: default; opacity: .55; }
+.al-steps button i { font-style: normal; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); font-size: 13px; flex: none; }
+.al-steps .done button i { background: var(--tw); color: #fff; }
+.al-steps .on button { border-color: var(--ink); color: var(--ink); }
+.al-steps .on button i { background: var(--ink); color: var(--paper); }
+@media (max-width: 900px) { .al-steps { grid-template-columns: repeat(3, 1fr); } }
+.al-play { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 1000px) { .al-play { grid-template-columns: 1fr; } }
+.al-browser { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 20px 40px -24px rgba(0, 0, 0, .35); background: #fff; }
+.al-bar { display: flex; align-items: center; gap: 12px; padding: 9px 12px; background: #eceef2; }
+.al-bar span { display: flex; gap: 6px; } .al-bar span i { width: 11px; height: 11px; border-radius: 50%; }
+.al-bar span i:nth-child(1) { background: #ff5f57; } .al-bar span i:nth-child(2) { background: #febc2e; } .al-bar span i:nth-child(3) { background: #28c840; }
+.al-url { flex: 1; background: #fff; border-radius: 8px; padding: 5px 12px; font: 500 14px var(--font-code); color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.al-url b { color: #1a7f37; font-weight: 500; }
+.al-site { min-height: 520px; background: #f6f8fc; color: #1b2440; font-family: var(--font-body); position: relative; }
+.al-site input, .al-site select { font: 15px var(--font-body); padding: 9px 11px; border: 1px solid #cdd5e3; border-radius: 9px; background: #fff; color: #1b2440; width: 100%; }
+.al-nav { display: flex; align-items: center; gap: 10px; padding: 14px 22px; background: #fff; border-bottom: 1px solid #e3e8f0; }
+.al-nav b { font-size: 18px; } .al-nav > span { font-size: 12px; background: #e8efff; color: #2f6bff; border-radius: 6px; padding: 2px 7px; font-weight: 700; }
+.al-nav nav { margin-left: auto; display: flex; gap: 16px; font-size: 14px; color: #5b6680; }
+.al-hero { padding: 40px 28px 24px; background: linear-gradient(135deg, #2f6bff, #6aa6ff); color: #fff; }
+.al-hero h4 { font: 800 32px/1.2 var(--font-display); letter-spacing: -.03em; } .al-hero p { margin-top: 8px; opacity: .9; }
+.al-body { padding: 22px 26px 26px; display: grid; gap: 12px; align-content: start; }
+.al-body h5, .al-docs h5 { font: 800 22px var(--font-display); letter-spacing: -.02em; display: flex; gap: 8px; align-items: center; }
+.al-docs h6 { font-size: 15px; margin-top: 4px; }
+.al-mut { color: #5b6680; font-size: 15px; line-height: 1.6; }
+.al-card { background: #fff; border: 1px solid #e3e8f0; border-radius: 14px; padding: 18px; display: grid; gap: 12px; }
+.al-hero + .al-card { margin: -14px 28px 26px; max-width: 380px; box-shadow: 0 10px 30px -12px rgba(27, 36, 64, .25); }
+.al-card label { display: grid; gap: 5px; font-size: 14px; font-weight: 700; color: #3b4660; }
+.al-card fieldset { border: 0; display: flex; gap: 14px; flex-wrap: wrap; } .al-card legend { font-size: 14px; font-weight: 700; color: #3b4660; margin-bottom: 6px; }
+.al-chk { display: flex !important; align-items: center; gap: 6px !important; font-weight: 500 !important; } .al-chk input { width: auto; }
+.al-btn { appearance: none; border: 0; background: #2f6bff; color: #fff; font: 700 16px var(--font-body); padding: 11px 18px; border-radius: 10px; cursor: pointer; justify-self: start; }
+.al-btn:disabled { opacity: .5; cursor: default; }
+.al-btn.sm { white-space: nowrap; padding: 6px 12px; font-size: 14px; background: #e8efff; color: #2f6bff; }
+.al-ok { color: #1a7f37; font-weight: 700; } .al-bad { color: #c62828; font-weight: 700; }
+.al-keyrow { grid-template-columns: 1fr; }
+.al-keyrow small { display: block; font-size: 12px; color: #5b6680; }
+.al-key { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.al-key code { flex: 1; min-width: 200px; font: 600 15px var(--font-code); background: #f1f4fa; border-radius: 8px; padding: 9px 12px; letter-spacing: .02em; word-break: break-all; }
+.al-usage i { display: block; height: 6px; border-radius: 99px; background: #e3e8f0; margin-top: 6px; overflow: hidden; } .al-usage i span { display: block; height: 100%; background: #2f6bff; }
+.al-warn { background: #fff4e5; color: #8a4b00; border-radius: 10px; padding: 10px 14px; font-size: 14px; line-height: 1.6; }
+.al-docs { display: grid; grid-template-columns: 150px 1fr; min-height: 520px; }
+.al-docs aside { background: #fff; border-right: 1px solid #e3e8f0; padding: 18px 12px; display: grid; gap: 4px; align-content: start; font-size: 14px; }
+.al-docs aside b { font-size: 12px; color: #8a94ab; margin: 0 8px 6px; }
+.al-docs aside a { padding: 6px 8px; border-radius: 7px; color: #5b6680; }
+.al-docs aside a.on { background: #e8efff; color: #2f6bff; font-weight: 700; }
+.al-docs > div { padding: 22px 24px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+@media (max-width: 700px) { .al-docs { grid-template-columns: 1fr; } .al-docs aside { display: none; } }
+.al-ep { display: flex; flex-wrap: wrap; background: #1b2440; border-radius: 10px; padding: 12px; gap: 2px; font: 600 15px var(--font-code); }
+.al-ep button { appearance: none; border: 0; border-radius: 6px; padding: 4px 6px; cursor: pointer; font: inherit; background: none; border-bottom: 2px solid; }
+.al-ep .get { color: #7ee2a8; } .al-ep .host { color: #c9d4ff; } .al-ep .path { color: #ffd479; } .al-ep .q { color: #ff9fb3; } .al-ep .key { color: #8fd6ff; }
+.al-ep button.seen { background: rgba(255, 255, 255, .1); }
+.al-ep button.cur { background: rgba(255, 255, 255, .22); }
+.al-tip { background: #fff; border: 1px solid #e3e8f0; border-radius: 10px; padding: 10px 14px; font-size: 15px; line-height: 1.6; min-height: 48px; }
+.al-tbl { width: 100%; border-collapse: collapse; font-size: 14px; background: #fff; border-radius: 10px; overflow: hidden; }
+.al-tbl th, .al-tbl td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #edf0f6; }
+.al-tbl th { background: #f1f4fa; font-size: 13px; color: #5b6680; }
+.al-tbl code, .al-req code { font-family: var(--font-code); }
+.al-json { background: #1b2440; color: #d7def0; border-radius: 10px; padding: 12px 14px; font: 14px/1.6 var(--font-code); white-space: pre-wrap; word-break: break-all; margin: 0; }
+.al-json .k { color: #8fd6ff; } .al-json .s { color: #ffd479; } .al-json .n { color: #7ee2a8; }
+.al-pill { font: 700 12px var(--font-body); background: #e8efff; color: #2f6bff; border-radius: 6px; padding: 2px 7px; }
+.al-keyin { display: flex; gap: 6px; } .al-keyin input { font-family: var(--font-code) !important; font-size: 13px !important; }
+.al-req { font-size: 13px; background: #f1f4fa; border-radius: 8px; padding: 8px 10px; word-break: break-all; line-height: 1.6; } .al-req b { color: #1a7f37; margin-right: 6px; }
+.al-resp { display: grid; gap: 8px; }
+.al-st { display: flex; gap: 10px; align-items: center; font-size: 14px; color: #5b6680; }
+.al-st b { color: #fff; border-radius: 6px; padding: 2px 9px; font-size: 14px; } .al-st b.ok { background: #1a7f37; } .al-st b.no { background: #c62828; }
+.al-app { padding: 20px 22px 24px; display: grid; gap: 16px; background: #0f1424; min-height: 520px; color: #e7ecf7; align-content: start; }
+.al-flow { display: grid; grid-template-columns: auto 1fr auto 1fr auto; align-items: center; gap: 6px; }
+.al-node { display: grid; justify-items: center; gap: 2px; background: #1b2440; border: 1px solid #2c3a5e; border-radius: 14px; padding: 10px 14px; font-size: 26px; min-width: 104px; transition: box-shadow .3s, border-color .3s; }
+.al-node b { font-size: 14px; } .al-node small { font-size: 12px; color: #8a94ab; }
+.al-node.hot { border-color: #7ee2a8; box-shadow: 0 0 0 4px rgba(126, 226, 168, .18); }
+.al-line { position: relative; height: 2px; background: repeating-linear-gradient(90deg, #3a4a72 0 6px, transparent 6px 12px); }
+.al-pk { position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%); opacity: 0; font: 700 12px var(--font-code); white-space: nowrap; padding: 4px 9px; border-radius: 99px; background: #ffd479; color: #1b2440; box-shadow: 0 6px 16px -4px rgba(255, 212, 121, .6); }
+.al-pk.back { background: #7ee2a8; box-shadow: 0 6px 16px -4px rgba(126, 226, 168, .6); }
+.al-grid2 { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 760px) { .al-grid2 { grid-template-columns: 1fr; } .al-flow { grid-template-columns: 1fr; } .al-line { height: 18px; width: 2px; justify-self: center; } }
+.al-phone { background: #fff; color: #1b2440; border-radius: 22px; padding: 14px; border: 6px solid #2c3a5e; display: grid; gap: 10px; min-height: 300px; align-content: start; }
+.al-phone h6 { font-size: 14px; }
+.al-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.al-chips button { appearance: none; border: 1px solid #cdd5e3; background: #fff; border-radius: 99px; padding: 3px 9px; font: 600 13px var(--font-body); cursor: pointer; color: #3b4660; }
+.al-chips button.on { background: #2f6bff; border-color: #2f6bff; color: #fff; }
+.al-chips button:disabled { opacity: .5; cursor: default; }
+.al-wx { border-radius: 16px; background: linear-gradient(160deg, #e8efff, #f6f8fc); padding: 16px; display: grid; gap: 6px; justify-items: center; text-align: center; min-height: 190px; align-content: center; }
+.al-wx .em { font-size: 52px; line-height: 1; } .al-wx .t { font: 800 44px var(--font-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.al-wx .m { font-size: 13px; color: #5b6680; }
+.al-wx.empty { color: #8a94ab; font-size: 14px; border: 2px dashed #cdd5e3; background: #f6f8fc; }
+.al-code { margin: 0; background: #1b2440; border-radius: 12px; padding: 12px 0; font: 13px/1.75 var(--font-code); overflow-x: auto; }
+.al-code span { display: block; padding: 0 14px; white-space: pre; color: #c9d4ff; transition: background .25s; border-left: 3px solid transparent; }
+.al-code span.c { color: #6f7ea3; } .al-code span.hl { background: rgba(255, 212, 121, .16); border-left-color: #ffd479; color: #fff; }
+.al-side { position: sticky; top: 150px; }
+.al-side .al-k { font: 700 13px var(--font-code); color: var(--sub); }
+.al-side h3 { font-size: 21px; }
+.al-side p { line-height: 1.7; }
+.al-real { background: var(--bg); border-radius: 10px; padding: 10px 14px; display: grid; gap: 4px; font-size: 15px; }
+.al-real b { font-size: 14px; color: var(--sub); }
+.al-real ul { padding-left: 18px; display: grid; gap: 3px; }
 /* 움직이는 화면 */
 .motion { display: grid; gap: 26px; }
 .sc-tip { font-size: 14px; color: var(--sub); line-height: 1.6; }
@@ -688,6 +787,21 @@ fetch("https://screen-lab-ten.vercel.app/api/quiz")
     </div>
   </section>
 
+
+  <section class="apil pg-api" aria-label="API 붙여 보기" hidden>
+    <div>
+      <h2>API 붙여 보기 체험</h2>
+      <p class="lead">진짜로 API를 쓰려면 API를 주는 회사 사이트에서 가입하고, 키를 받고, 설명서를 읽고, 시험해 본 뒤 내 앱에 붙여요. 연습용 가상 사이트 <b>'구름상자'</b>에서 그 순서를 그대로 해 보세요. 날씨는 진짜 지금 날씨가 와요.</p>
+    </div>
+    <ol class="al-steps" id="alSteps"></ol>
+    <div class="al-play">
+      <div class="al-browser">
+        <div class="al-bar"><span><i></i><i></i><i></i></span><div class="al-url" id="alUrl"></div></div>
+        <div class="al-site" id="alSite"></div>
+      </div>
+      <div class="al-side pbox" id="alSide"></div>
+    </div>
+  </section>
 
   <section class="motion pg-motion" aria-label="움직이는 화면" hidden>
     <div>
@@ -1900,6 +2014,186 @@ document.getElementById("aqPrev").onclick = () => aqI > 0 && aqShow(aqI - 1);
 document.getElementById("aqNext").onclick = () => aqI < AQ.length - 1 && aqShow(aqI + 1);
 document.getElementById("aqReset").onclick = () => { aqPick = {}; try { sessionStorage.removeItem("api-quiz"); } catch (e) {} aqShow(0); };
 aqShow(0);
+
+// ── API 붙여 보기: 연습용 가상 사이트 '구름상자' (날씨는 진짜, Open-Meteo에서) ──
+const AL_CITY = { Seoul: ["서울", 37.57, 126.98], Busan: ["부산", 35.18, 129.08], Daejeon: ["대전", 36.35, 127.38], Gwangju: ["광주", 35.16, 126.85], Jeju: ["제주", 33.5, 126.53] };
+const AL = [
+  { t: "가입", url: "https://<b>gureumbox.test</b>", h: "API를 주는 사이트에 가입해요",
+    d: "API는 회사나 기관이 '우리 데이터를 이 창구로 가져가세요' 하고 열어 둔 거예요. 먼저 그 사이트에 회원가입을 해요. 왼쪽 화면에서 가입해 보세요.",
+    real: "공공데이터포털(data.go.kr), OpenWeather, 카카오·네이버 개발자 사이트 모두 가입부터 해요. 교실에서 쓸 정도는 대부분 무료예요." },
+  { t: "앱 등록", url: "https://<b>gureumbox.test</b>/console/apps/new", h: "어디에 쓸지 등록해요",
+    d: "내 앱 이름과 쓸 곳을 알려 주면 그 앱 전용 키가 나와요. 앱이 여러 개면 키도 여러 개예요.",
+    real: "공공데이터포털은 '활용신청', 카카오는 '애플리케이션 추가하기'라고 불러요. 바로 승인되기도 하고 몇 시간 기다리기도 해요." },
+  { t: "키 받기", url: "https://<b>gureumbox.test</b>/console/keys", h: "API 키를 받아요",
+    d: "키는 '이 요청은 이 사람이 보낸 거예요'라고 알려 주는 비밀번호예요. 보기를 눌러 확인하고 복사해 두세요. 다음 단계에서 써요.",
+    real: "이름이 제각각이에요. API Key, 인증키, 서비스키, Client ID·Secret, 토큰. 모두 같은 역할이에요. 새로 받은 키는 바로 안 될 때가 있어요(공공데이터포털은 1시간쯤)." },
+  { t: "설명서", url: "https://<b>gureumbox.test</b>/docs/weather", h: "설명서에서 주소 읽는 법",
+    d: "설명서에는 '이 주소로, 이렇게 물어보면, 이렇게 답해 줄게'가 적혀 있어요. 색깔 부분을 하나씩 눌러 주소가 어떻게 생겼는지 보세요.",
+    real: "'API 문서', 'Docs', '개발 가이드'라고 써 있어요. 영어라도 괜찮아요. 설명서 주소나 내용을 AI에게 통째로 주면 AI가 대신 읽고 코드를 짜 줘요." },
+  { t: "시험 요청", url: "https://<b>gureumbox.test</b>/docs/weather#try", h: "코드 쓰기 전에 시험해 봐요",
+    d: "키 없이 한 번, 내 키를 넣고 한 번 보내 보세요. 없는 도시도 골라 보세요. 실패하면 어떤 답이 오는지 알아 두면 나중에 오류를 금방 알아봐요.",
+    real: "많은 사이트가 '미리보기'·'Try it' 버튼을 줘요. 여기서 먼저 성공해 보면, 앱이 안 될 때 '키 문제인지 내 코드 문제인지' 바로 가릴 수 있어요." },
+  { t: "내 앱에 붙이기", url: "http://<b>localhost:3000</b> · 내 앱", h: "내 앱에 붙여요",
+    d: "키는 화면 코드에 쓰지 않고 '내 서버'에만 숨겨 둬요. 화면이 내 서버에 묻고, 내 서버가 키를 붙여 구름상자에 묻고, 답이 거꾸로 돌아와요. ▶를 눌러 그 길을 보세요.",
+    real: "배포할 때는 Vercel의 Environment Variables에 키를 넣어요. .env 파일은 깃허브에 올리지 않아요." }
+];
+const al = { step: 0, max: 0, done: [], app: "우리 반 날씨 알리미", key: "", shown: false, parts: new Set(), used: 0, city: "Seoul", busy: false };
+const alKey = () => { const c = "abcdefghjkmnpqrstuvwxyz23456789"; return "gb_live_" + Array.from({ length: 24 }, () => c[Math.floor(Math.random() * c.length)]).join(""); };
+const alMask = k => k.slice(0, 8) + "•".repeat(12) + k.slice(-4);
+const alSky = c => c === 0 ? ["맑음", "☀️"] : c <= 2 ? ["구름 조금", "🌤️"] : c === 3 ? ["흐림", "☁️"] : c <= 48 ? ["안개", "🌫️"] : c <= 67 ? ["비", "🌧️"] : c <= 77 ? ["눈", "🌨️"] : c <= 82 ? ["소나기", "🌦️"] : ["천둥번개", "⛈️"];
+const alWait = ms => new Promise(r => setTimeout(r, ms));
+const alJson = o => esc(JSON.stringify(o, null, 2)).replace(/("[^"]*")(\s*:)?|(-?\d+\.?\d*)/g, (m, str, colon, num) => str ? '<span class="' + (colon ? "k" : "s") + '">' + str + "</span>" + (colon || "") : '<span class="n">' + num + "</span>");
+async function alWeather(city) {   // 구름상자 서버 흉내: 실제 지금 날씨를 받아 구름상자 모양으로 바꿔 줘요
+  const [ko, lat, lon] = AL_CITY[city];
+  try {
+    const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&wind_speed_unit=ms&timezone=Asia%2FSeoul");
+    const c = (await r.json()).current;
+    return { city, name: ko, temp: c.temperature_2m, sky: alSky(c.weather_code)[0], icon: alSky(c.weather_code)[1], humidity: c.relative_humidity_2m, wind: c.wind_speed_10m, time: c.time };
+  } catch (e) { return { city, name: ko, temp: 15, sky: "맑음", icon: "☀️", humidity: 50, wind: 2, time: "연습용 값 (인터넷 연결을 확인하세요)" }; }
+}
+async function alCall(city, key) {
+  if (!key) return { status: 401, body: { error: "key가 없어요. 주소 끝에 &key=내_키 를 붙여 주세요." } };
+  if (key !== al.key) return { status: 401, body: { error: "키가 맞지 않아요. 콘솔에서 키를 다시 복사해 보세요." } };
+  if (!AL_CITY[city]) return { status: 404, body: { error: "'" + city + "'라는 도시는 없어요. 설명서의 도시 목록을 확인하세요." } };
+  al.used++;
+  return { status: 200, body: await alWeather(city) };
+}
+const alNav = right => '<div class="al-nav"><b>☁️ 구름상자</b><span>Open API</span><nav>' + right + "</nav></div>";
+const alAside = on => "<aside><b>문서</b>" + ["시작하기", "현재 날씨", "시험해 보기", "오류 코드"].map(t => '<a class="' + (t === on ? "on" : "") + '">' + t + "</a>").join("") + "</aside>";
+const AL_PARTS = [
+  ["GET", "get", "<b>GET</b> 정보를 '달라고' 하는 요청이에요. 무언가를 저장할 때는 POST를 써요."],
+  ["https://api.gureumbox.test", "host", "<b>기본 주소</b> 구름상자 서버가 사는 곳이에요. 모든 요청이 여기로 가요."],
+  ["/v1/weather", "path", "<b>경로</b> 서버 안의 여러 창구 중 '날씨' 창구를 골라요. v1은 1번째 버전이라는 뜻이에요."],
+  ["?city=Seoul", "q", "<b>질문(파라미터)</b> 어느 도시인지 알려 줘요. <code>?</code> 뒤에 <code>이름=값</code>으로 써요."],
+  ["&key=내_키", "key", "<b>키</b> 내가 누구인지 알려 줘요. 질문이 여러 개면 <code>&</code>로 이어 붙여요."]
+];
+function alDone(i) { al.done[i] = true; al.max = Math.max(al.max, i + 1); alSide(); alStepsDraw(); }
+function alGo(i) { al.step = i; alRender(); }
+function alStepsDraw() {
+  document.getElementById("alSteps").innerHTML = AL.map((x, i) => '<li class="' + (i === al.step ? "on " : "") + (al.done[i] ? "done" : "") + '"><button data-i="' + i + '"' + (i > al.max ? " disabled" : "") + "><i>" + (al.done[i] ? "✓" : i + 1) + "</i>" + x.t + "</button></li>").join("");
+}
+function alSide() {
+  const x = AL[al.step], last = al.step === AL.length - 1;
+  document.getElementById("alSide").innerHTML = '<span class="al-k">STEP ' + (al.step + 1) + " / " + AL.length + "</span><h3>" + x.h + "</h3><p>" + x.d + '</p><div class="al-real"><b>실제 사이트에서는</b><p>' + x.real + "</p></div>" +
+    (last ? '<button class="mo-ask" title="눌러서 복사"><b>AI에게</b>"API 설명서를 아래에 붙여 넣을게. 도시를 고르면 지금 날씨를 보여 주는 앱을 만들어 줘. API 키는 .env.local의 WEATHER_KEY에 넣어 뒀어. 키가 화면 코드에 드러나지 않게 서버(API 라우트)에서 불러 줘."</button>' +
+      (al.done[al.step] ? '<div class="al-real"><b>🎉 끝! 진짜로 해 볼 만한 곳</b><ul><li><b>Open-Meteo</b> 가입·키 없이 바로 되는 날씨 API (이 체험의 날씨도 여기서 와요)</li><li><b>공공데이터포털</b> 기상청 단기예보, 급식 식단(나이스) 등</li><li><b>OpenWeather</b> 세계 날씨, 가입하면 무료 키</li><li><b>카카오·네이버 개발자</b> 지도, 검색, 로그인</li></ul></div>' : "")
+      : '<button class="pbtn primary" id="alNext"' + (al.done[al.step] ? "" : " disabled") + ">" + (al.done[al.step] ? "다음: " + AL[al.step + 1].t + " →" : "왼쪽 화면에서 해 보세요") + "</button>");
+  const n = document.getElementById("alNext"); if (n) n.onclick = () => alGo(al.step + 1);
+}
+const AL_VIEW = [
+  // 0 가입
+  () => alNav("문서 · 요금 · 로그인") + '<div class="al-hero"><h4>전국 날씨를<br>내 앱으로 가져가세요</h4><p>가입하면 하루 1,000번까지 무료</p></div>' +
+    '<form class="al-card" id="alForm"><b style="font-size:18px">회원가입</b><label>이메일<input value="teacher@school.test" autocomplete="off"></label><label>비밀번호<input type="password" value="practice1234" autocomplete="off"></label><button class="al-btn">가입하고 시작하기</button><div id="alMsg"></div></form>',
+  // 1 앱 등록
+  () => alNav("콘솔 · 문서 · teacher@school.test") + '<div class="al-body"><h5>새 앱 등록</h5><p class="al-mut">API를 어디에 쓸지 알려 주세요. 앱마다 키가 따로 나와요.</p>' +
+    '<form class="al-card" id="alForm"><label>앱 이름<input id="alApp" value="' + esc(al.app) + '"></label><label>어디에 쓰나요<select><option>수업·교육용</option><option>개인 공부</option><option>회사 서비스</option></select></label>' +
+    '<fieldset><legend>쓸 API</legend><label class="al-chk"><input type="checkbox" checked disabled> 현재 날씨</label><label class="al-chk"><input type="checkbox"> 미세먼지</label><label class="al-chk"><input type="checkbox"> 일주일 예보</label></fieldset>' +
+    '<button class="al-btn">등록 신청</button><div id="alMsg"></div></form></div>',
+  // 2 키
+  () => alNav("콘솔 · 문서 · teacher@school.test") + '<div class="al-body"><h5>내 API 키</h5><p class="al-mut">이 키는 비밀번호와 같아요. 다른 사람에게 보여 주지 마세요.</p>' +
+    '<div class="al-card al-keyrow"><div><small>앱</small><b>' + esc(al.app) + '</b></div><div><small>API 키</small><div class="al-key"><code id="alKeyTxt">' + (al.shown ? al.key : alMask(al.key)) + '</code><button class="al-btn sm" id="alShow">' + (al.shown ? "가리기" : "보기") + '</button><button class="al-btn sm" id="alCopy">복사</button></div></div>' +
+    '<div class="al-usage"><small>오늘 사용량</small><b>' + al.used + ' / 1,000회</b><i><span style="width:' + al.used / 10 + '%"></span></i></div></div>' +
+    '<p class="al-warn">⚠️ 키를 깃허브에 올리거나 화면 코드에 그대로 쓰면, 다른 사람이 내 이름으로 API를 써 버릴 수 있어요. 한도가 바닥나거나 돈이 나가기도 해요.</p></div>',
+  // 3 설명서
+  () => alNav("콘솔 · 문서 · teacher@school.test") + '<div class="al-docs">' + alAside("현재 날씨") + '<div><h5>현재 날씨 가져오기</h5><p class="al-mut">도시 이름을 보내면 지금 날씨를 돌려줘요. 주소의 색깔 부분을 눌러 보세요.</p>' +
+    '<div class="al-ep">' + AL_PARTS.map((x, i) => '<button class="' + x[1] + (al.parts.has(i) ? " seen" : "") + '" data-p="' + i + '">' + x[0] + "</button>").join("") + '</div><div class="al-tip" id="alTip">↑ 색깔 부분을 눌러 보세요 (' + al.parts.size + " / 5)</div>" +
+    '<h6>보낼 것</h6><table class="al-tbl"><tr><th>이름</th><th>꼭?</th><th>설명</th></tr><tr><td><code>city</code></td><td>예</td><td>도시 영어 이름: Seoul, Busan, Daejeon, Gwangju, Jeju</td></tr><tr><td><code>key</code></td><td>예</td><td>콘솔에서 받은 내 API 키</td></tr></table>' +
+    '<h6>답 예시 (JSON)</h6><pre class="al-json">' + alJson({ city: "Seoul", name: "서울", temp: 14.2, sky: "맑음", icon: "☀️", humidity: 52, wind: 2.1, time: "2026-11-03T10:00" }) + "</pre>" +
+    '<h6>오류</h6><table class="al-tbl"><tr><td><b>401</b></td><td>키가 없거나 틀렸어요</td></tr><tr><td><b>404</b></td><td>없는 도시예요</td></tr><tr><td><b>429</b></td><td>오늘 한도(1,000번)를 넘었어요</td></tr></table></div></div>',
+  // 4 시험 요청
+  () => alNav("콘솔 · 문서 · teacher@school.test") + '<div class="al-docs">' + alAside("시험해 보기") + '<div><h5>시험해 보기 <span class="al-pill">Try it</span></h5><p class="al-mut">코드를 쓰기 전에 여기서 키가 되는지 먼저 확인해요.</p>' +
+    '<div class="al-card"><label>city<select id="alCity">' + Object.keys(AL_CITY).map(c => "<option>" + c + "</option>").join("") + '<option value="Atlantis">Atlantis (없는 도시)</option></select></label>' +
+    '<label>key<span class="al-keyin"><input id="alKeyIn" placeholder="여기에 키를 붙여 넣으세요" spellcheck="false" autocomplete="off"><button type="button" class="al-btn sm" id="alPaste">내 키 넣기</button></span></label>' +
+    '<div class="al-req"><b>GET</b><code id="alReqUrl"></code></div><button class="al-btn" id="alSend">요청 보내기 ▶</button></div>' +
+    '<div class="al-resp" id="alResp"><span class="al-mut">아직 보낸 요청이 없어요. 키 없이 먼저 보내 보는 것도 좋아요.</span></div></div></div>',
+  // 5 내 앱
+  () => '<div class="al-app"><div class="al-flow"><div class="al-node" id="alN0">🖥️<b>내 앱 화면</b><small>학생 휴대폰</small></div><div class="al-line"><i class="al-pk" id="alP0"></i></div>' +
+    '<div class="al-node" id="alN1">🔐<b>내 서버</b><small>키는 여기에만</small></div><div class="al-line"><i class="al-pk" id="alP1"></i></div><div class="al-node" id="alN2">☁️<b>구름상자</b><small>API 서버</small></div></div>' +
+    '<div class="al-grid2"><div class="al-phone"><h6>⛅ ' + esc(al.app) + '</h6><div class="al-chips" id="alChips">' + Object.entries(AL_CITY).map(([k, v]) => '<button data-c="' + k + '" class="' + (k === al.city ? "on" : "") + '">' + v[0] + "</button>").join("") + "</div>" +
+    '<div class="al-wx empty" id="alWx">아직 API가 연결되지 않았어요</div></div><pre class="al-code" id="alCode"></pre></div>' +
+    '<button class="al-btn" id="alRun" style="background:#ffd479;color:#1b2440">▶ 연결해서 실행</button></div>'
+];
+function alCodeDraw() {
+  const L = [["c", "// .env.local  ← 깃허브에 올라가지 않는 비밀 파일"], ["", "WEATHER_KEY=" + alMask(al.key)], ["", " "],
+    ["c", "// 내 서버 · api/weather.js"], ["", "const url = `https://api.gureumbox.test/v1/weather"], ["", "  ?city=${city}&key=${process.env.WEATHER_KEY}`;"], ["", "const data = await (await fetch(url)).json();"], ["", "res.json(data);"], ["", " "],
+    ["c", "// 내 앱 화면"], ["", 'const data = await (await fetch("/api/weather?city=' + al.city + '")).json();'], ["", 'temp.textContent = data.temp + "°";']];
+  document.getElementById("alCode").innerHTML = L.map(([c, t], i) => '<span class="' + c + '" data-l="' + i + '">' + esc(t) + "</span>").join("");
+}
+function alRender() {
+  const x = AL[al.step];
+  document.getElementById("alUrl").innerHTML = x.url;
+  document.getElementById("alSite").innerHTML = AL_VIEW[al.step]();
+  alStepsDraw(); alSide();
+  const $a = id => document.getElementById(id);
+  if (al.step === 0) $a("alForm").onsubmit = async e => { e.preventDefault(); e.submitter.disabled = true; $a("alMsg").innerHTML = '<span class="al-ok">✅ 가입했어요! 콘솔로 이동해요…</span>'; alDone(0); await alWait(900); if (al.step === 0) alGo(1); };
+  if (al.step === 1) $a("alForm").onsubmit = async e => {
+    e.preventDefault(); e.submitter.disabled = true; al.app = $a("alApp").value.trim() || "우리 반 날씨 알리미";
+    $a("alMsg").innerHTML = '<span class="al-mut">⏳ 심사 중이에요…</span>'; await alWait(1300);
+    if (!al.key) al.key = alKey();
+    $a("alMsg") && ($a("alMsg").innerHTML = '<span class="al-ok">✅ 승인됐어요! 키가 나왔어요.</span>'); alDone(1); await alWait(900); if (al.step === 1) alGo(2);
+  };
+  if (al.step === 2) {
+    $a("alShow").onclick = () => { al.shown = !al.shown; $a("alKeyTxt").textContent = al.shown ? al.key : alMask(al.key); $a("alShow").textContent = al.shown ? "가리기" : "보기"; alDone(2); };
+    $a("alCopy").onclick = () => (navigator.clipboard ? navigator.clipboard.writeText(al.key) : Promise.reject()).then(() => pToast("키를 복사했어요"), () => pToast("복사가 안 되면 다음 단계에서 '내 키 넣기'를 누르세요")).finally(() => alDone(2));
+  }
+  if (al.step === 3) document.querySelector(".al-ep").onclick = e => {
+    const b = e.target.closest("button"); if (!b) return; const i = +b.dataset.p; al.parts.add(i);
+    document.querySelectorAll(".al-ep button").forEach((x, j) => { x.classList.toggle("seen", al.parts.has(j)); x.classList.toggle("cur", j === i); });
+    $a("alTip").innerHTML = AL_PARTS[i][2] + ' <span class="al-mut">(' + al.parts.size + " / 5)</span>";
+    if (al.parts.size >= 5 && !al.done[3]) alDone(3);
+  };
+  if (al.step === 4) {
+    const url = () => "https://api.gureumbox.test/v1/weather?city=" + $a("alCity").value + "&key=" + ($a("alKeyIn").value.trim() || "");
+    const upd = () => $a("alReqUrl").textContent = url(); upd();
+    $a("alCity").onchange = $a("alKeyIn").oninput = upd;
+    $a("alPaste").onclick = () => { $a("alKeyIn").value = al.key; upd(); };
+    $a("alSend").onclick = async () => {
+      const btn = $a("alSend"); btn.disabled = true; $a("alResp").innerHTML = '<span class="al-mut">⏳ 보내는 중…</span>'; const t0 = performance.now();
+      const r = await alCall($a("alCity").value, $a("alKeyIn").value.trim()); await alWait(250);
+      if (!$a("alResp")) return;
+      $a("alResp").innerHTML = '<div class="al-st"><b class="' + (r.status === 200 ? "ok" : "no") + '">' + r.status + " " + (r.status === 200 ? "OK" : r.status === 401 ? "Unauthorized" : "Not Found") + "</b>" + Math.round(performance.now() - t0) + "ms · " +
+        (r.status === 200 ? "성공! 이 답을 앱이 받아서 화면에 보여 줘요" : r.status === 401 ? "키 문제예요" : "물어본 게 잘못됐어요") + '</div><pre class="al-json">' + alJson(r.body) + "</pre>";
+      btn.disabled = false; if (r.status === 200) alDone(4);
+    };
+  }
+  if (al.step === 5) { alCodeDraw(); $a("alRun").onclick = () => alRun(); $a("alChips").onclick = e => { const b = e.target.closest("button"); if (b && !al.busy) { al.city = b.dataset.c; alRun(); } }; }
+}
+async function alRun() {
+  if (al.busy) return; al.busy = true;
+  const $a = id => document.getElementById(id), run = $a("alRun"); run.disabled = true;
+  document.querySelectorAll("#alChips button").forEach(b => { b.classList.toggle("on", b.dataset.c === al.city); b.disabled = true; });
+  alCodeDraw();
+  const hl = ls => document.querySelectorAll("#alCode span").forEach(s => s.classList.toggle("hl", ls.includes(+s.dataset.l)));
+  const hot = n => [0, 1, 2].forEach(i => $a("alN" + i).classList.toggle("hot", i === n));
+  const fly = (i, back, label) => { const p = $a("alP" + i); p.textContent = label; p.classList.toggle("back", back);
+    return p.animate([{ left: back ? "100%" : "0%", opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .88 }, { left: back ? "0%" : "100%", opacity: 0 }], { duration: 1100, easing: "cubic-bezier(.5,0,.3,1)" }).finished; };
+  const name = AL_CITY[al.city][0], wx = alWeather(al.city);
+  try {
+    hot(0); hl([10]); await fly(0, false, name + " 날씨 줘");
+    hot(1); hl([1, 4, 5]); await alWait(350); await fly(1, false, "?city=" + al.city + "&key=gb_…");
+    hot(2); hl([4, 5]); const d = await wx; al.used++; await alWait(400);
+    hl([6]); await fly(1, true, "{ temp: " + d.temp + " … }");
+    hot(1); hl([7]); await alWait(250); await fly(0, true, "{ JSON }");
+    hot(0); hl([11]);
+    const w = $a("alWx"); w.classList.remove("empty");
+    w.innerHTML = '<div class="em">' + d.icon +
+      '</div><div class="t">0°</div><b>' + d.name + " · " + d.sky + '</b><div class="m">습도 ' + d.humidity + "% · 바람 " + d.wind + "m/s<br>" + esc(String(d.time)).replace("T", " ") + " 기준</div>";
+    w.animate([{ transform: "scale(.92)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 500, easing: "cubic-bezier(.34,1.56,.64,1)" });
+    const t = w.querySelector(".t"), t0 = performance.now();
+    await new Promise(r => { const f = now => { const p = Math.min(1, (now - t0) / 800); t.textContent = (d.temp * (1 - Math.pow(1 - p, 3))).toFixed(1) + "°"; p < 1 ? requestAnimationFrame(f) : r(); }; requestAnimationFrame(f); });
+    if (!al.done[5]) alDone(5);
+  } catch (e) { /* 다른 단계로 옮기면 요소가 사라져요 */ }
+  al.busy = false;
+  if ($a("alRun")) { $a("alRun").disabled = false; $a("alRun").textContent = "▶ 다시 실행 (위에서 도시를 바꿔 보세요)"; hot(-1); }
+  document.querySelectorAll("#alChips button").forEach(b => b.disabled = false);
+}
+document.getElementById("alSteps").addEventListener("click", e => { const b = e.target.closest("button"); if (b && !b.disabled) alGo(+b.dataset.i); });
+document.getElementById("alSide").addEventListener("click", e => {
+  const a = e.target.closest(".mo-ask"); if (!a) return;
+  const t = a.textContent.replace(/^AI에게/, "").replace(/^"|"$/g, "");
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => pToast("복사했어요. AI 채팅창에 붙여 넣으세요"), () => pToast("복사가 안 돼요. 직접 드래그해서 복사해 주세요"));
+});
+alRender();
 
 // ── 움직이는 화면 ──
 const MO_SEC = [
